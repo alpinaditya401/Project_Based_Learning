@@ -11,10 +11,11 @@
 
 FROM php:8.3-apache
 
-# pdo_sqlite dan sqlite3 sudah ada di image resmi; baris ini memastikan
-# keduanya benar-benar aktif dan gagal saat build kalau tidak.
-RUN docker-php-ext-install pdo_sqlite \
- && php -m | grep -q '^pdo_sqlite$' \
+# pdo_sqlite sudah dikompilasi ke dalam PHP di image resmi (--with-pdo-sqlite),
+# jadi cukup diperiksa, bukan dipasang. docker-php-ext-install pdo_sqlite justru
+# mengompilasi ulang dari sumber dan gagal, karena header libsqlite3-dev sudah
+# dibuang image resmi setelah build-nya selesai.
+RUN php -m | grep -q '^pdo_sqlite$' \
  && php -m | grep -q '^session$' \
  && a2enmod rewrite headers
 

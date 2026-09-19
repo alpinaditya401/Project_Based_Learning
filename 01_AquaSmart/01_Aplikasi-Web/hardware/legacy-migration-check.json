@@ -1,0 +1,84 @@
+{
+  "source": "backup snapshot; active database unchanged",
+  "checks": {
+    "users": {
+      "rows_before": 8,
+      "rows_after": 8,
+      "original_values_preserved": true
+    },
+    "device_inventory": {
+      "rows_before": 0,
+      "rows_after": 0,
+      "original_values_preserved": true
+    },
+    "devices": {
+      "rows_before": 2,
+      "rows_after": 2,
+      "original_values_preserved": true
+    },
+    "sensor_readings": {
+      "rows_before": 36,
+      "rows_after": 36,
+      "original_values_preserved": true
+    },
+    "audit_logs": {
+      "rows_before": 0,
+      "rows_after": 0,
+      "original_values_preserved": true
+    },
+    "feeding_schedules": {
+      "rows_before": 2,
+      "rows_after": 2,
+      "original_values_preserved": true
+    },
+    "alerts": {
+      "rows_before": 3,
+      "rows_after": 3,
+      "original_values_preserved": true
+    },
+    "threshold_settings": {
+      "rows_before": 8,
+      "rows_after": 8,
+      "original_values_preserved": true
+    },
+    "workspace_invitations": {
+      "rows_before": 0,
+      "rows_after": 0,
+      "original_values_preserved": true
+    },
+    "growth_observations": {
+      "rows_before": 0,
+      "rows_after": 0,
+      "original_values_preserved": true
+    },
+    "actuator_commands": {
+      "rows_before": 0,
+      "rows_after": 0,
+      "original_values_preserved": true
+    },
+    "api_rate_limits": {
+      "rows_before": 2,
+      "rows_after": 2,
+      "original_values_preserved": true
+    }
+  },
+  "quick_check": "ok",
+  "provenance_counts": {
+    "sensor_readings": [
+      [
+        "legacy_unverified",
+        36
+      ]
+    ],
+    "alerts": [
+      [
+        "legacy_unverified",
+        3
+      ]
+    ],
+    "actuator_commands": [],
+    "growth_observations": [],
+    "audit_logs": []
+  },
+  "passed": true
+}

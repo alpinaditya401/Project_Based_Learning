@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-09-15T15:34:51.0595297+07:00",
+  "tools": [
+    {
+      "name": "arduino-cli",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "caddy",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "openssl",
+      "available": false,
+      "path": null
+    },
+    {
+      "name": "php",
+      "available": true,
+      "path": "C:\\xampp\\php\\php.exe"
+    },
+    {
+      "name": "python",
+      "available": true,
+      "path": "C:\\Users\\User\\AppData\\Local\\hermes\\hermes-agent\\venv\\Scripts\\python.exe"
+    }
+  ],
+  "serial_ports": [],
+  "serial_error": null
+}

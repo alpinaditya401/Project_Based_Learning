@@ -1,0 +1,31 @@
+import {launch,until} from './review_runtime.mjs';
+import {mkdirSync,readdirSync,readFileSync} from 'node:fs';
+import {join} from 'node:path';
+const t=await launch(process.argv[2]||'filtered-export');
+try {
+ const downloads=join(t.temp,'downloads');mkdirSync(downloads);
+ await t.send('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:downloads});
+ await t.viewport(1440,1024);await t.login();await t.hash('reports','#filtered-export-form');
+ await t.fill('#export-date','2000-01-01');await t.fill('#export-format','json');
+ await t.click('#filtered-export-form [type=submit]');
+ const jsonFile=await until(()=>readdirSync(downloads).find(f=>f.endsWith('.json')),'JSON download');
+ const data=JSON.parse(readFileSync(join(downloads,jsonFile),'utf8'));
+ t.check('Empty JSON download preserves filters and no invented readings',data.rows.length===0&&data.meta.date==='2000-01-01'&&data.meta.device_id==='AQS-KOLAM-01');
+ await until(()=>t.evaluate('document.querySelector("#filtered-export-status").textContent.includes("Periode kosong")'));
+ t.check('Empty result is explained',true);
+ await t.fill('#export-format','csv');await t.fill('#export-kind','feeding_logs');
+ await t.click('#filtered-export-form [type=submit]');
+ const csvFile=await until(()=>readdirSync(downloads).find(f=>f.endsWith('.csv')),'CSV download');
+ const csv=readFileSync(join(downloads,csvFile),'utf8').trim();
+ t.check('Empty CSV has only real schema header',csv.startsWith('id,device_id,created_at,actuator,')&&!csv.includes('\n'));
+ await t.intercept('/api/export',500,{error:{message:'Pengujian kegagalan ekspor'}});
+ await t.click('#filtered-export-form [type=submit]');
+ await until(()=>t.evaluate('document.querySelector("#filtered-export-status").textContent.includes("Ekspor gagal")'));
+ t.check('Server failure shown and retry enabled',await t.evaluate('!document.querySelector("#filtered-export-form button").disabled'));
+ await t.viewport(320,740);
+ t.check('Export fits small mobile',await t.evaluate('document.documentElement.scrollWidth<=innerWidth+1'));
+ await t.evaluate('document.querySelector("#filtered-export-form").scrollIntoView({block:"start",behavior:"instant"})');
+ await t.shot('export-mobile');
+ t.check('No runtime exceptions',t.errors.length===0,t.errors);
+} catch(error) {t.check('Export flow',false,error.stack);} finally {await t.close();}
+process.exitCode=t.results.some(r=>!r.pass)?1:0;

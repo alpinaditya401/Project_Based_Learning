@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* Token diturunkan dari web/assets/css/app.css, bukan palet baru. Nilai hex harus
+   tetap identik supaya SPA lama dan frontend Next.js tidak berbeda warna.
+   Varian *-text dipakai untuk teks di atas latar terang: kontrasnya sudah pernah
+   diperbaiki di aplikasi lama, sedangkan warna dasarnya hanya untuk bidang/ikon. */
+@theme {
+  --color-ink: #10262a;
+  --color-deep-current: #0e2a30;
+  --color-clear-water: #4c9a8e;
+  --color-sediment: #b9834f;
+  --color-alarm-coral: #d2601f;
+  --color-foam: #f1f5f3;
+  --color-foam-line: #d8e2de;
+
+  --color-clear-water-text: #1b5b52;
+  --color-sediment-text: #7a4b1a;
+  --color-alarm-coral-text: #9b3b09;
+
+  --color-surface: #f1f5f3;
+  --color-surface-white: #f8faf9;
+  --color-bg-deep: #e7eeeb;
+  --color-muted: #50676a;
+
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", Consolas, monospace;
+
+  --radius-crisp: 4px;
+  --radius-panel: 10px;
+  --radius-media: 20px;
+
+  --shadow-elevated: 0 8px 24px -6px rgb(14 42 48 / 0.18);
+
+  --spacing-content: 1180px;
+}
+
+/* DESIGN.md menolak dark mode secara sadar, jadi tidak ada blok
+   prefers-color-scheme maupun varian .dark di sini. Itu bukan kelalaian. */
+
+body {
+  background-color: var(--color-foam);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+/* Dipakai app/dashboard/loading.tsx. Ditulis sebagai CSS biasa, bukan @apply,
+   supaya kelasnya tetap ada walau daftar utility Tailwind berubah. */
+.skeleton {
+  background-color: var(--color-bg-deep);
+  border-radius: var(--radius-crisp);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

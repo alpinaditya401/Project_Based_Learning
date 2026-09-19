@@ -1,0 +1,9 @@
+**/__pycache__/
+**/*.pyc
+server/data/
+server/tests/
+server/tls/
+server/*.py
+node_modules/
+.git/
+*.md

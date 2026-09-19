@@ -1,0 +1,53 @@
+# Repo publik ini hanya memuat deliverable AquaSmart. Ruang kerja lokal berisi
+# empat project lain, materi kursus pihak ketiga, modul kampus, dan dokumen yang
+# memuat data pribadi orang lain. Semua itu sengaja tidak diterbitkan.
+#
+# Pola di bawah adalah daftar putih: tolak semuanya lebih dulu, lalu izinkan
+# satu per satu. Urutannya penting, karena git tidak bisa mengizinkan kembali
+# berkas yang direktori induknya masih tertolak.
+
+/*
+!/.gitignore
+!/README.md
+!/frontend/
+!/01_AquaSmart/
+
+/01_AquaSmart/*
+!/01_AquaSmart/01_Aplikasi-Web/
+
+# Salinan cadangan proses dan laporan praktikum yang memuat nama serta NIM
+# mahasiswa lain. Keduanya bukan bagian deliverable.
+/01_AquaSmart/01_Aplikasi-Web/_backup-sebelum-revisi/
+/01_AquaSmart/01_Aplikasi-Web/Laporan_Praktikum_Modul_5_6_7/
+
+# ---------- Artefak build ----------
+node_modules/
+.next/
+out/
+build/
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+
+# ---------- Rahasia dan basis data lokal ----------
+.env
+.env.local
+.env.*.local
+*.local.txt
+*.pem
+*.key
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3
+*.db
+
+# ---------- Cache ----------
+__pycache__/
+*.py[cod]
+*.log
+.DS_Store
+Thumbs.db
+
+# ---------- Keluaran runtime AquaSmart ----------
+/01_AquaSmart/01_Aplikasi-Web/server/data/local-*/

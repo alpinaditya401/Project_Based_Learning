@@ -1,0 +1,10 @@
+{
+    admin off
+    skip_install_trust
+    auto_https disable_redirects
+}
+
+https://{$AQUASMART_TLS_HOST}:8443 {
+    tls internal
+    reverse_proxy 127.0.0.1:8080
+}

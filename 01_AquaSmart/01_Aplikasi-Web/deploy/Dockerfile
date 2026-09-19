@@ -82,6 +82,18 @@ RUN { \
 # Railway dan Render menyuntikkan $PORT saat runtime, jadi port tidak bisa
 # dipatok saat build. Volume Railway dipasang oleh root di atas /data dan
 # menimpa izin dari build, jadi direktori data di-chown lagi setiap start.
+#
+# Runtime container Railway tidak menerapkan whiteout OCI, sehingga berkas yang
+# dihapus di layer belakangan muncul lagi. Staf Railway mengakuinya sebagai bug
+# yang belum diperbaiki:
+# https://station.railway.com/questions/files-that-never-existed-on-the-image-ge-5f629342
+# Image resmi mematikan mpm_event dengan a2dismod di layer tersendiri, jadi di
+# Railway symlink-nya hidup lagi dan Apache berhenti dengan AH00534 "More than
+# one MPM loaded". MPM karena itu ditetapkan ulang saat start, bukan saat build.
+# a2dismod harus lebih dulu: a2enmod menolak mpm_prefork selama mpm_event aktif.
+# Keduanya keluar dengan kode 0 kalau keadaannya sudah benar, jadi set -e tidak
+# terpicu. configtest menghentikan start.sh sebelum exec kalau masih ada MPM
+# kedua dari sumber lain.
 RUN printf '%s\n' \
   '#!/bin/sh' \
   'set -e' \
@@ -91,6 +103,9 @@ RUN printf '%s\n' \
   'sed -ri "s/^Listen .*/Listen ${PORT}/" /etc/apache2/ports.conf' \
   'sed -ri "s!<VirtualHost \\*:[0-9]+>!<VirtualHost *:${PORT}>!" /etc/apache2/sites-available/000-default.conf' \
   'sed -ri "s!DocumentRoot /var/www/html!DocumentRoot ${APACHE_DOCUMENT_ROOT}!" /etc/apache2/sites-available/000-default.conf' \
+  'a2dismod -q mpm_event mpm_worker' \
+  'a2enmod -q mpm_prefork' \
+  'apache2ctl configtest' \
   'exec apache2-foreground' \
   > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 

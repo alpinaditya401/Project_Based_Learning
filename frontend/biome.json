@@ -1,7 +1,14 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "files": {
-    "includes": ["**", "!**/.next", "!**/node_modules", "!next-env.d.ts"]
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/node_modules",
+      "!**/.vercel",
+      "!next-env.d.ts",
+      "!lib/api/fixtures.json"
+    ]
   },
   "formatter": {
     "enabled": true,

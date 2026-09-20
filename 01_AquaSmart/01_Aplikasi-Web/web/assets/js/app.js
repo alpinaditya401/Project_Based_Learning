@@ -603,7 +603,7 @@
 
   function sidebar(active) {
     const unread = state.alerts.filter(a => !a.read).length;
-    const link = (path, label, iconName, count = '') => `<a class="nav-link ${active === path ? 'active' : ''}" href="#/${path}">${icon(iconName)}<span>${label}</span>${count ? `<span class="nav-count">${count}</span>` : ''}</a>`;
+    const link = (path, label, iconName, count = '') => `<a class="nav-link ${active === path ? 'active' : ''}"${active === path ? ' aria-current="page"' : ''} href="#/${path}">${icon(iconName)}<span>${label}</span>${count ? `<span class="nav-count">${count}</span>` : ''}</a>`;
     return `
       <div class="drawer-overlay" id="drawer-overlay"></div>
       <aside class="sidebar" id="sidebar" aria-label="Menu aplikasi">

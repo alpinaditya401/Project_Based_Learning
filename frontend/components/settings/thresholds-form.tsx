@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useUpdateThresholds } from "@/hooks/use-thresholds"
 import { type Thresholds, ThresholdsInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -52,7 +53,6 @@ export function ThresholdsForm({ thresholds }: { thresholds: Thresholds }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Field id="ph-min" label="pH minimum" hint={PH_HINT} error={errors.ph_min}>
           <input
-            id="ph-min"
             name="ph_min"
             type="number"
             inputMode="decimal"
@@ -60,14 +60,12 @@ export function ThresholdsForm({ thresholds }: { thresholds: Thresholds }) {
             min={0}
             max={14}
             defaultValue={thresholds.ph_min}
-            className={input}
-            aria-invalid={Boolean(errors.ph_min)}
-            aria-describedby={describedBy("ph-min", PH_HINT, errors.ph_min)}
+            className={control()}
+            {...fieldProps("ph-min", { hint: PH_HINT, error: errors.ph_min })}
           />
         </Field>
         <Field id="ph-max" label="pH maksimum" hint={PH_HINT} error={errors.ph_max}>
           <input
-            id="ph-max"
             name="ph_max"
             type="number"
             inputMode="decimal"
@@ -75,49 +73,42 @@ export function ThresholdsForm({ thresholds }: { thresholds: Thresholds }) {
             min={0}
             max={14}
             defaultValue={thresholds.ph_max}
-            className={input}
-            aria-invalid={Boolean(errors.ph_max)}
-            aria-describedby={describedBy("ph-max", PH_HINT, errors.ph_max)}
+            className={control()}
+            {...fieldProps("ph-max", { hint: PH_HINT, error: errors.ph_max })}
           />
         </Field>
         <Field id="suhu-min" label="Suhu minimum (°C)" error={errors.temperature_min}>
           <input
-            id="suhu-min"
             name="temperature_min"
             type="number"
             inputMode="decimal"
             step="0.1"
             defaultValue={thresholds.temperature_min}
-            className={input}
-            aria-invalid={Boolean(errors.temperature_min)}
-            aria-describedby={describedBy("suhu-min", undefined, errors.temperature_min)}
+            className={control()}
+            {...fieldProps("suhu-min", { error: errors.temperature_min })}
           />
         </Field>
         <Field id="suhu-max" label="Suhu maksimum (°C)" error={errors.temperature_max}>
           <input
-            id="suhu-max"
             name="temperature_max"
             type="number"
             inputMode="decimal"
             step="0.1"
             defaultValue={thresholds.temperature_max}
-            className={input}
-            aria-invalid={Boolean(errors.temperature_max)}
-            aria-describedby={describedBy("suhu-max", undefined, errors.temperature_max)}
+            className={control()}
+            {...fieldProps("suhu-max", { error: errors.temperature_max })}
           />
         </Field>
         <Field id="kekeruhan-max" label="Kekeruhan maksimum (NTU)" error={errors.turbidity_max}>
           <input
-            id="kekeruhan-max"
             name="turbidity_max"
             type="number"
             inputMode="decimal"
             step="1"
             min={0}
             defaultValue={thresholds.turbidity_max}
-            className={input}
-            aria-invalid={Boolean(errors.turbidity_max)}
-            aria-describedby={describedBy("kekeruhan-max", undefined, errors.turbidity_max)}
+            className={control()}
+            {...fieldProps("kekeruhan-max", { error: errors.turbidity_max })}
           />
         </Field>
       </div>

@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useCreateObservation } from "@/hooks/use-observations"
 import { ObservationInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -64,14 +65,12 @@ export function ObservationForm({ deviceId, today }: { deviceId: string; today: 
           error={errors.observed_at}
         >
           <input
-            id="observation-date"
             name="observed_at"
             type="date"
             max={today}
             defaultValue={today}
-            className={input}
-            aria-invalid={Boolean(errors.observed_at)}
-            aria-describedby={describedBy("observation-date", DATE_HINT, errors.observed_at)}
+            className={control()}
+            {...fieldProps("observation-date", { hint: DATE_HINT, error: errors.observed_at })}
           />
         </Field>
 
@@ -82,15 +81,13 @@ export function ObservationForm({ deviceId, today }: { deviceId: string; today: 
           error={errors.weight_g}
         >
           <input
-            id="observation-weight"
             name="weight_g"
             type="number"
             inputMode="decimal"
             step="0.1"
             min={0}
-            className={input}
-            aria-invalid={Boolean(errors.weight_g)}
-            aria-describedby={describedBy("observation-weight", MEASURE_HINT, errors.weight_g)}
+            className={control()}
+            {...fieldProps("observation-weight", { hint: MEASURE_HINT, error: errors.weight_g })}
           />
         </Field>
 
@@ -101,27 +98,23 @@ export function ObservationForm({ deviceId, today }: { deviceId: string; today: 
           error={errors.length_cm}
         >
           <input
-            id="observation-length"
             name="length_cm"
             type="number"
             inputMode="decimal"
             step="0.1"
             min={0}
-            className={input}
-            aria-invalid={Boolean(errors.length_cm)}
-            aria-describedby={describedBy("observation-length", MEASURE_HINT, errors.length_cm)}
+            className={control()}
+            {...fieldProps("observation-length", { hint: MEASURE_HINT, error: errors.length_cm })}
           />
         </Field>
       </div>
 
       <Field id="observation-notes" label="Catatan" hint={NOTES_HINT} error={errors.notes}>
         <textarea
-          id="observation-notes"
           name="notes"
           rows={3}
-          className={cn(input, "min-h-24 py-2")}
-          aria-invalid={Boolean(errors.notes)}
-          aria-describedby={describedBy("observation-notes", NOTES_HINT, errors.notes)}
+          className={cn(control(), "min-h-24 py-2")}
+          {...fieldProps("observation-notes", { hint: NOTES_HINT, error: errors.notes })}
         />
       </Field>
 

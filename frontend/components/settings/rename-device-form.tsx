@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useId, useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useUpdateDevice } from "@/hooks/use-devices"
 import { DeviceUpdateInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -53,24 +54,20 @@ export function RenameDeviceForm({
       <div className="grid gap-4 sm:grid-cols-2">
         <Field id={nameId} label="Nama perangkat" error={errors.name}>
           <input
-            id={nameId}
             name="name"
             defaultValue={name}
             maxLength={100}
-            className={input}
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={describedBy(nameId, undefined, errors.name)}
+            className={control()}
+            {...fieldProps(nameId, { error: errors.name })}
           />
         </Field>
         <Field id={locationId} label="Lokasi" error={errors.location}>
           <input
-            id={locationId}
             name="location"
             defaultValue={location}
             maxLength={150}
-            className={input}
-            aria-invalid={Boolean(errors.location)}
-            aria-describedby={describedBy(locationId, undefined, errors.location)}
+            className={control()}
+            {...fieldProps(locationId, { error: errors.location })}
           />
         </Field>
       </div>

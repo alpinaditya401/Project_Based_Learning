@@ -19,10 +19,10 @@ export function ActuatorToggle({
   on: boolean
 }) {
   const router = useRouter()
-  const control = useControlActuator(deviceId)
+  const toggle = useControlActuator(deviceId)
 
   function send() {
-    control.mutate(
+    toggle.mutate(
       { actuator, value: !on, request_id: crypto.randomUUID() },
       { onSuccess: () => router.refresh() },
     )
@@ -33,14 +33,14 @@ export function ActuatorToggle({
       <button
         type="button"
         onClick={send}
-        disabled={control.isPending}
+        disabled={toggle.isPending}
         className={button({ tone: on ? "secondary" : "primary", className: "w-full" })}
       >
-        {control.isPending ? "Mengirim perintah..." : `${on ? "Matikan" : "Nyalakan"} ${label}`}
+        {toggle.isPending ? "Mengirim perintah..." : `${on ? "Matikan" : "Nyalakan"} ${label}`}
       </button>
-      {control.isError ? (
+      {toggle.isError ? (
         <p role="alert" className="text-sm text-alarm-coral-text">
-          {control.error.message}
+          {toggle.error.message}
         </p>
       ) : null}
     </div>

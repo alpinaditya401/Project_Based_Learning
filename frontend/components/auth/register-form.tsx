@@ -3,8 +3,9 @@
 import { UserPlus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useRegister } from "@/hooks/use-session"
 import { RegisterInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -18,7 +19,7 @@ const SERIAL_HINT =
 
 // min-w-0 lets the field shrink below an input's intrinsic width, so the show/hide
 // button next to it cannot push the row wider than a 360px screen.
-const passwordInput = `${input} min-w-0`
+const passwordInput = `${control()} min-w-0`
 
 export function RegisterForm() {
   const router = useRouter()
@@ -60,37 +61,31 @@ export function RegisterForm() {
     <form onSubmit={onSubmit} noValidate className="space-y-5">
       <Field id="name" label="Nama lengkap" error={errors.name}>
         <input
-          id="name"
           name="name"
           autoComplete="name"
           maxLength={100}
-          className={input}
-          aria-invalid={Boolean(errors.name)}
-          aria-describedby={describedBy("name", undefined, errors.name)}
+          className={control()}
+          {...fieldProps("name", { error: errors.name })}
         />
       </Field>
 
       <Field id="contact" label="Email atau nomor WA" hint={CONTACT_HINT} error={errors.contact}>
         <input
-          id="contact"
           name="contact"
           autoComplete="username"
-          className={input}
-          aria-invalid={Boolean(errors.contact)}
-          aria-describedby={describedBy("contact", CONTACT_HINT, errors.contact)}
+          className={control()}
+          {...fieldProps("contact", { hint: CONTACT_HINT, error: errors.contact })}
         />
       </Field>
 
       <Field id="password" label="Password" hint={PASSWORD_HINT} error={errors.password}>
         <div className="flex gap-2">
           <input
-            id="password"
             name="password"
             type={showPassword ? "text" : "password"}
             autoComplete="new-password"
             className={passwordInput}
-            aria-invalid={Boolean(errors.password)}
-            aria-describedby={describedBy("password", PASSWORD_HINT, errors.password)}
+            {...fieldProps("password", { hint: PASSWORD_HINT, error: errors.password })}
           />
           <button
             type="button"
@@ -110,17 +105,11 @@ export function RegisterForm() {
         error={errors.password_confirmation}
       >
         <input
-          id="password_confirmation"
           name="password_confirmation"
           type="password"
           autoComplete="new-password"
-          className={input}
-          aria-invalid={Boolean(errors.password_confirmation)}
-          aria-describedby={describedBy(
-            "password_confirmation",
-            undefined,
-            errors.password_confirmation,
-          )}
+          className={control()}
+          {...fieldProps("password_confirmation", { error: errors.password_confirmation })}
         />
       </Field>
 
@@ -131,14 +120,12 @@ export function RegisterForm() {
         error={errors.serial_number}
       >
         <input
-          id="serial_number"
           name="serial_number"
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
-          className={`${input} font-data`}
-          aria-invalid={Boolean(errors.serial_number)}
-          aria-describedby={describedBy("serial_number", SERIAL_HINT, errors.serial_number)}
+          className={`${control({ font: "data" })}`}
+          {...fieldProps("serial_number", { hint: SERIAL_HINT, error: errors.serial_number })}
         />
       </Field>
 

@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useControlActuator } from "@/hooks/use-control"
 import { ControlInput } from "@/lib/api/schemas"
 
@@ -13,7 +14,7 @@ const HINT = "1 sampai 30 detik."
 
 export function FeedNowForm({ deviceId }: { deviceId: string }) {
   const router = useRouter()
-  const control = useControlActuator(deviceId)
+  const feed = useControlActuator(deviceId)
   const [error, setError] = useState<string>()
   const [sent, setSent] = useState(false)
 
@@ -32,7 +33,7 @@ export function FeedNowForm({ deviceId }: { deviceId: string }) {
     }
     setError(undefined)
     setSent(false)
-    control.mutate(parsed.data, {
+    feed.mutate(parsed.data, {
       onSuccess: () => {
         setSent(true)
         router.refresh()
@@ -44,31 +45,25 @@ export function FeedNowForm({ deviceId }: { deviceId: string }) {
     <form onSubmit={onSubmit} noValidate className="space-y-3">
       <Field id="feed-duration" label="Durasi pakan (detik)" hint={HINT} error={error}>
         <input
-          id="feed-duration"
           name="duration"
           type="number"
           inputMode="numeric"
           min={1}
           max={30}
           defaultValue={DEFAULT_SECONDS}
-          className={input}
-          aria-invalid={Boolean(error)}
-          aria-describedby={describedBy("feed-duration", HINT, error)}
+          className={control()}
+          {...fieldProps("feed-duration", { hint: HINT, error: error })}
         />
       </Field>
-      <button
-        type="submit"
-        disabled={control.isPending}
-        className={button({ className: "w-full" })}
-      >
-        {control.isPending ? "Mengirim perintah..." : "Beri pakan sekarang"}
+      <button type="submit" disabled={feed.isPending} className={button({ className: "w-full" })}>
+        {feed.isPending ? "Mengirim perintah..." : "Beri pakan sekarang"}
       </button>
-      {control.isError ? (
+      {feed.isError ? (
         <p role="alert" className="text-sm text-alarm-coral-text">
-          {control.error.message}
+          {feed.error.message}
         </p>
       ) : null}
-      {sent && !control.isPending ? (
+      {sent && !feed.isPending ? (
         <p role="status" className="text-sm text-ink">
           Perintah pakan tercatat. Statusnya ada di riwayat perintah di bawah.
         </p>

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { panel } from "@/components/ui/styles"
+import { heading, inlineLink, panel } from "@/components/ui/styles"
 import { Provenance, type Report } from "@/lib/api/schemas"
 import { formatDate, formatNumber, provenanceLabel } from "@/lib/format"
 
@@ -14,8 +14,8 @@ function windowText(report: Report): string {
 export function ReportSummary({ report }: { report: Report }) {
   if (report.total_samples === 0) {
     return (
-      <div className={`${panel} space-y-2`}>
-        <p className="font-display text-xl font-semibold text-ink">
+      <div className={`${panel()} space-y-2`}>
+        <p className={heading({ level: "panel", tone: "ink" })}>
           Tidak ada pembacaan pada periode ini
         </p>
         <p className="text-sm text-ink">
@@ -24,7 +24,7 @@ export function ReportSummary({ report }: { report: Report }) {
         </p>
         <Link
           href={`/dashboard?device=${encodeURIComponent(report.device_id)}`}
-          className="inline-flex min-h-11 items-center text-sm font-medium text-deep-current underline underline-offset-4"
+          className={inlineLink}
         >
           Periksa status perangkat di halaman Kualitas Air
         </Link>
@@ -33,7 +33,7 @@ export function ReportSummary({ report }: { report: Report }) {
   }
 
   return (
-    <div className={`${panel} space-y-4`}>
+    <div className={`${panel()} space-y-4`}>
       <div>
         <p className="font-data text-3xl font-bold text-deep-current">
           {formatNumber(report.total_samples, 0)}
@@ -62,7 +62,7 @@ export function ReportSummary({ report }: { report: Report }) {
       </p>
 
       <div>
-        <h3 className="font-display text-lg font-semibold text-ink">Rincian sumber data</h3>
+        <h3 className={heading({ level: "sub", tone: "ink" })}>Rincian sumber data</h3>
         <ul className="mt-2">
           {Provenance.options.map((source) => (
             <li

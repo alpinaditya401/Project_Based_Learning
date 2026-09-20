@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useAcceptInvitation } from "@/hooks/use-workspace"
 import { InvitationAcceptInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -33,13 +34,11 @@ export function JoinWorkspaceForm() {
     <form onSubmit={onSubmit} noValidate className="space-y-4">
       <Field id="invitation-token" label="Token undangan" hint={TOKEN_HINT} error={errors.token}>
         <input
-          id="invitation-token"
           name="token"
           autoComplete="off"
           spellCheck={false}
-          className={`${input} font-data`}
-          aria-invalid={Boolean(errors.token)}
-          aria-describedby={describedBy("invitation-token", TOKEN_HINT, errors.token)}
+          className={`${control({ font: "data" })}`}
+          {...fieldProps("invitation-token", { hint: TOKEN_HINT, error: errors.token })}
         />
       </Field>
 

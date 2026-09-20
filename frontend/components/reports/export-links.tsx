@@ -1,5 +1,5 @@
 import type { z } from "zod"
-import { button } from "@/components/ui/styles"
+import { button, inlineLink } from "@/components/ui/styles"
 import { ExportKind, type ReportQuery } from "@/lib/api/schemas"
 
 // One label per kind that /api/export accepts. Keyed by the schema enum, so a kind
@@ -43,7 +43,7 @@ export function ExportLinks({ query }: { query: ReportQuery }) {
               </a>
               <a
                 href={exportHref(query, kind, "json")}
-                className="inline-flex min-h-11 items-center text-sm font-medium text-deep-current underline underline-offset-4"
+                className={inlineLink}
                 aria-label={`Buka JSON ${KIND_LABEL[kind]}`}
               >
                 JSON

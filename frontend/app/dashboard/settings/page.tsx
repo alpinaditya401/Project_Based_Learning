@@ -5,7 +5,7 @@ import { InviteForm } from "@/components/settings/invite-form"
 import { RevokeMemberButton } from "@/components/settings/revoke-member-button"
 import { RuleVersionsTable } from "@/components/settings/rule-versions-table"
 import { ThresholdsForm } from "@/components/settings/thresholds-form"
-import { panel } from "@/components/ui/styles"
+import { heading, panel } from "@/components/ui/styles"
 import {
   AuditLogsResponse,
   DevicesResponse,
@@ -37,7 +37,7 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-10">
       <header className="space-y-2">
-        <h1 className="font-display text-3xl font-bold text-deep-current">Pengaturan</h1>
+        <h1 className={heading()}>Pengaturan</h1>
         <p className="max-w-prose text-sm text-ink">
           Ambang kualitas air, perangkat, anggota, dan riwayat aktivitas ruang budidaya ini.
           {isAdmin
@@ -48,7 +48,7 @@ export default async function SettingsPage() {
 
       <section aria-labelledby="ambang" className="space-y-4">
         <div className="space-y-1">
-          <h2 id="ambang" className="font-display text-xl font-semibold text-ink">
+          <h2 id="ambang" className={heading({ level: "panel", tone: "ink" })}>
             Ambang kualitas air
           </h2>
           <p className="max-w-prose text-sm text-muted">
@@ -56,7 +56,7 @@ export default async function SettingsPage() {
           </p>
         </div>
 
-        <div className={`${panel} space-y-4`}>
+        <div className={`${panel()} space-y-4`}>
           {isAdmin ? (
             <ThresholdsForm thresholds={thresholds} />
           ) : (
@@ -91,7 +91,7 @@ export default async function SettingsPage() {
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-display text-lg font-semibold text-ink">Versi aturan tercatat</h3>
+          <h3 className={heading({ level: "sub", tone: "ink" })}>Versi aturan tercatat</h3>
           <p className="max-w-prose text-sm text-muted">
             Saat perangkat mengirim pembacaan, server mencatat ambang yang dipakai saat itu sebagai
             satu snapshot. Id snapshot adalah hash SHA-256 dari id pemilik ruang budidaya, versi
@@ -99,7 +99,7 @@ export default async function SettingsPage() {
             tersebut. Kolom Pembacaan menghitung berapa pembacaan yang dinilai dengan snapshot itu.
           </p>
           {ruleVersions.versions.length === 0 ? (
-            <p className={`${panel} text-sm text-muted`}>
+            <p className={`${panel()} text-sm text-muted`}>
               Belum ada versi aturan tercatat. Snapshot dibuat saat perangkat mengirim pembacaan
               berikutnya, dan data lama tidak direkonstruksi.
             </p>
@@ -112,7 +112,7 @@ export default async function SettingsPage() {
 
       <section aria-labelledby="perangkat" className="space-y-4">
         <div className="space-y-1">
-          <h2 id="perangkat" className="font-display text-xl font-semibold text-ink">
+          <h2 id="perangkat" className={heading({ level: "panel", tone: "ink" })}>
             Perangkat
           </h2>
           {isAdmin ? (
@@ -128,7 +128,7 @@ export default async function SettingsPage() {
         </div>
 
         {devices.length === 0 ? (
-          <p className={`${panel} text-sm text-ink`}>
+          <p className={`${panel()} text-sm text-ink`}>
             Belum ada perangkat di ruang budidaya ini, jadi belum ada pembacaan yang masuk.{" "}
             {isAdmin
               ? "Hubungkan perangkat pertama lewat formulir di bawah, pakai serial pada label alat."
@@ -143,8 +143,8 @@ export default async function SettingsPage() {
         )}
 
         {isAdmin ? (
-          <div className={`${panel} space-y-4`}>
-            <h3 className="font-display text-lg font-semibold text-ink">Hubungkan perangkat</h3>
+          <div className={`${panel()} space-y-4`}>
+            <h3 className={heading({ level: "sub", tone: "ink" })}>Hubungkan perangkat</h3>
             <ClaimDeviceForm />
           </div>
         ) : null}
@@ -152,7 +152,7 @@ export default async function SettingsPage() {
 
       <section aria-labelledby="anggota" className="space-y-4">
         <div className="space-y-1">
-          <h2 id="anggota" className="font-display text-xl font-semibold text-ink">
+          <h2 id="anggota" className={heading({ level: "panel", tone: "ink" })}>
             Anggota ruang budidaya
           </h2>
           <p className="max-w-prose text-sm text-muted">
@@ -191,9 +191,9 @@ export default async function SettingsPage() {
         ) : null}
 
         {isAdmin ? (
-          <div className={`${panel} space-y-4`}>
+          <div className={`${panel()} space-y-4`}>
             <div className="space-y-1">
-              <h3 className="font-display text-lg font-semibold text-ink">Undang anggota</h3>
+              <h3 className={heading({ level: "sub", tone: "ink" })}>Undang anggota</h3>
               <p className="max-w-prose text-sm text-muted">
                 Undangan menghasilkan token yang hanya ditampilkan sekali. Orang yang diundang
                 memakainya untuk bergabung dengan akun yang kontaknya sama.
@@ -202,7 +202,7 @@ export default async function SettingsPage() {
             <InviteForm />
           </div>
         ) : (
-          <p className={`${panel} text-sm text-ink`}>
+          <p className={`${panel()} text-sm text-ink`}>
             Akun viewer tidak bisa mengundang atau mencabut anggota. Daftar di atas dikelola admin
             ruang budidaya.
           </p>
@@ -211,7 +211,7 @@ export default async function SettingsPage() {
 
       <section aria-labelledby="riwayat-aktivitas" className="space-y-4">
         <div className="space-y-1">
-          <h2 id="riwayat-aktivitas" className="font-display text-xl font-semibold text-ink">
+          <h2 id="riwayat-aktivitas" className={heading({ level: "panel", tone: "ink" })}>
             Riwayat aktivitas
           </h2>
           <p className="max-w-prose text-sm text-muted">
@@ -222,7 +222,7 @@ export default async function SettingsPage() {
           </p>
         </div>
         {audit_logs.length === 0 ? (
-          <p className={`${panel} text-sm text-muted`}>
+          <p className={`${panel()} text-sm text-muted`}>
             Belum ada aktivitas tercatat. Catatan muncul setelah ada yang masuk, mengubah
             pengaturan, atau perangkat mengirim data.
           </p>

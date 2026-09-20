@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useCreateInvitation } from "@/hooks/use-workspace"
 import { InvitationInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -47,12 +48,10 @@ export function InviteForm() {
           error={errors.contact}
         >
           <input
-            id="invitation-contact"
             name="contact"
             autoComplete="off"
-            className={input}
-            aria-invalid={Boolean(errors.contact)}
-            aria-describedby={describedBy("invitation-contact", CONTACT_HINT, errors.contact)}
+            className={control()}
+            {...fieldProps("invitation-contact", { hint: CONTACT_HINT, error: errors.contact })}
           />
         </Field>
 

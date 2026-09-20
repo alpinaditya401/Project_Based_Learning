@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useCreateSchedule } from "@/hooks/use-schedules"
 import { ScheduleDays, ScheduleInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -46,14 +47,12 @@ export function ScheduleForm({ deviceId }: { deviceId: string }) {
       <div className="grid gap-4 sm:grid-cols-3">
         <Field id="schedule-time" label="Jam (WIB)" error={errors.time}>
           <input
-            id="schedule-time"
             name="time"
             type="time"
             required
             defaultValue="07:00"
-            className={input}
-            aria-invalid={Boolean(errors.time)}
-            aria-describedby={describedBy("schedule-time", undefined, errors.time)}
+            className={control()}
+            {...fieldProps("schedule-time", { error: errors.time })}
           />
         </Field>
         <Field
@@ -63,25 +62,21 @@ export function ScheduleForm({ deviceId }: { deviceId: string }) {
           error={errors.duration}
         >
           <input
-            id="schedule-duration"
             name="duration"
             type="number"
             inputMode="numeric"
             min={1}
             max={30}
             defaultValue={8}
-            className={input}
-            aria-invalid={Boolean(errors.duration)}
-            aria-describedby={describedBy("schedule-duration", DURATION_HINT, errors.duration)}
+            className={control()}
+            {...fieldProps("schedule-duration", { hint: DURATION_HINT, error: errors.duration })}
           />
         </Field>
         <Field id="schedule-days" label="Hari" error={errors.days}>
           <select
-            id="schedule-days"
             name="days"
-            className={input}
-            aria-invalid={Boolean(errors.days)}
-            aria-describedby={describedBy("schedule-days", undefined, errors.days)}
+            className={control()}
+            {...fieldProps("schedule-days", { error: errors.days })}
           >
             {ScheduleDays.options.map((days) => (
               <option key={days} value={days}>

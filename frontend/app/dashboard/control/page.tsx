@@ -6,7 +6,7 @@ import { FeedNowForm } from "@/components/control/feed-now-form"
 import { SimulationNotice } from "@/components/control/simulation-notice"
 import { NoDevice } from "@/components/dashboard/no-device"
 import { DevicePicker } from "@/components/device-picker"
-import { panel } from "@/components/ui/styles"
+import { heading, inlineLink, panel } from "@/components/ui/styles"
 import { CommandsResponse, DevicesResponse } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 import { pickDevice } from "@/lib/devices"
@@ -49,9 +49,7 @@ export default async function ControlPage({
 
       <header className="space-y-3">
         <p className="text-sm text-muted">{device.location}</p>
-        <h1 className="font-display text-3xl font-bold text-deep-current">
-          Kontrol Aktuator: {device.name}
-        </h1>
+        <h1 className={heading()}>Kontrol Aktuator: {device.name}</h1>
         <p className="text-sm text-ink">
           {device.online
             ? "Perangkat online."
@@ -64,7 +62,7 @@ export default async function ControlPage({
       <SimulationNotice />
 
       {isAdmin ? null : (
-        <p className={`${panel} text-sm text-ink`}>
+        <p className={`${panel()} text-sm text-ink`}>
           Akun viewer hanya bisa melihat status. Perintah hanya bisa dikirim admin ruang budidaya.
         </p>
       )}
@@ -74,9 +72,9 @@ export default async function ControlPage({
           Aktuator
         </h2>
         <div className="grid gap-4 lg:grid-cols-3">
-          <article className={`${panel} flex flex-col gap-4`}>
+          <article className={`${panel()} flex flex-col gap-4`}>
             <div className="space-y-1">
-              <h3 className="font-display text-xl font-semibold text-ink">Aerator</h3>
+              <h3 className={heading({ level: "panel", tone: "ink" })}>Aerator</h3>
               <p className="text-sm text-muted">Menambah sirkulasi dan oksigen di air kolam.</p>
             </div>
             <State on={device.aerator} />
@@ -92,9 +90,9 @@ export default async function ControlPage({
             ) : null}
           </article>
 
-          <article className={`${panel} flex flex-col gap-4`}>
+          <article className={`${panel()} flex flex-col gap-4`}>
             <div className="space-y-1">
-              <h3 className="font-display text-xl font-semibold text-ink">Feeder</h3>
+              <h3 className={heading({ level: "panel", tone: "ink" })}>Feeder</h3>
               <p className="text-sm text-muted">
                 Memberi pakan satu kali selama durasi yang dipilih.
               </p>
@@ -111,18 +109,15 @@ export default async function ControlPage({
             ) : null}
           </article>
 
-          <article className={`${panel} flex flex-col gap-4`}>
+          <article className={`${panel()} flex flex-col gap-4`}>
             <div className="space-y-1">
-              <h3 className="font-display text-xl font-semibold text-ink">Mode otomatis</h3>
+              <h3 className={heading({ level: "panel", tone: "ink" })}>Mode otomatis</h3>
               <p className="text-sm text-muted">
                 Saat menyala, jadwal pakan yang aktif dijalankan scheduler simulator.
               </p>
             </div>
             <State on={device.auto} />
-            <Link
-              href={`/dashboard/schedule${query}`}
-              className="inline-flex min-h-11 items-center text-sm font-medium text-deep-current underline underline-offset-4"
-            >
+            <Link href={`/dashboard/schedule${query}`} className={inlineLink}>
               Lihat jadwal pakan
             </Link>
             {isAdmin ? (
@@ -141,7 +136,7 @@ export default async function ControlPage({
 
       <section aria-labelledby="riwayat-perintah" className="space-y-4">
         <div className="space-y-1">
-          <h2 id="riwayat-perintah" className="font-display text-xl font-semibold text-ink">
+          <h2 id="riwayat-perintah" className={heading({ level: "panel", tone: "ink" })}>
             Riwayat perintah
           </h2>
           <p className="text-sm text-muted">
@@ -150,7 +145,7 @@ export default async function ControlPage({
           </p>
         </div>
         {commands.length === 0 ? (
-          <p className={`${panel} text-sm text-muted`}>
+          <p className={`${panel()} text-sm text-muted`}>
             Belum ada perintah untuk perangkat ini.
             {isAdmin ? " Perintah yang Anda kirim di atas akan muncul di sini." : ""}
           </p>

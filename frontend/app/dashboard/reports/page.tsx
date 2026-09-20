@@ -5,7 +5,7 @@ import { ObservationList } from "@/components/reports/observation-list"
 import { ReportFilter } from "@/components/reports/report-filter"
 import { ReportSummary } from "@/components/reports/report-summary"
 import { ReportTable } from "@/components/reports/report-table"
-import { panel } from "@/components/ui/styles"
+import { heading, panel } from "@/components/ui/styles"
 import { DevicesResponse, ObservationsResponse, Report, ReportQuery } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 import { pickDevice } from "@/lib/devices"
@@ -70,17 +70,15 @@ export default async function ReportsPage({
     <div className="space-y-8">
       <header className="space-y-3">
         <p className="text-sm text-muted">{device ? device.location : "Perangkat belum dipilih"}</p>
-        <h1 className="font-display text-3xl font-bold text-deep-current">
-          Laporan{device ? `: ${device.name}` : ""}
-        </h1>
+        <h1 className={heading()}>Laporan{device ? `: ${device.name}` : ""}</h1>
         <p className="text-sm text-ink">
           Periode dihitung dalam UTC dan minggu dimulai hari Senin. Filter ikut tersimpan di alamat
           halaman, jadi laporan ini bisa ditandai dan dibuka lagi.
         </p>
       </header>
 
-      <section aria-labelledby="filter-laporan" className={`${panel} space-y-4`}>
-        <h2 id="filter-laporan" className="font-display text-xl font-semibold text-ink">
+      <section aria-labelledby="filter-laporan" className={`${panel()} space-y-4`}>
+        <h2 id="filter-laporan" className={heading({ level: "panel", tone: "ink" })}>
           Pilih laporan
         </h2>
         <ReportFilter devices={devices} value={requested} />
@@ -97,7 +95,7 @@ export default async function ReportsPage({
       {report && device ? (
         <>
           <section aria-labelledby="ringkasan-laporan" className="space-y-4">
-            <h2 id="ringkasan-laporan" className="font-display text-xl font-semibold text-ink">
+            <h2 id="ringkasan-laporan" className={heading({ level: "panel", tone: "ink" })}>
               Ringkasan periode
             </h2>
             <ReportSummary report={report} />
@@ -105,7 +103,7 @@ export default async function ReportsPage({
 
           {report.groups.length > 0 ? (
             <section aria-labelledby="rekap-harian" className="space-y-4">
-              <h2 id="rekap-harian" className="font-display text-xl font-semibold text-ink">
+              <h2 id="rekap-harian" className={heading({ level: "panel", tone: "ink" })}>
                 Rekap per hari
               </h2>
               <ReportTable groups={report.groups} />
@@ -113,7 +111,7 @@ export default async function ReportsPage({
           ) : null}
 
           <section aria-labelledby="unduh-data" className="space-y-4">
-            <h2 id="unduh-data" className="font-display text-xl font-semibold text-ink">
+            <h2 id="unduh-data" className={heading({ level: "panel", tone: "ink" })}>
               Unduh data
             </h2>
             <ExportLinks
@@ -127,7 +125,7 @@ export default async function ReportsPage({
 
           <section aria-labelledby="observasi" className="space-y-4">
             <div className="space-y-1">
-              <h2 id="observasi" className="font-display text-xl font-semibold text-ink">
+              <h2 id="observasi" className={heading({ level: "panel", tone: "ink" })}>
                 Observasi pertumbuhan
               </h2>
               <p className="text-sm text-ink">
@@ -141,17 +139,15 @@ export default async function ReportsPage({
             <ObservationList observations={observations} isAdmin={isAdmin} />
 
             {isAdmin ? (
-              <div className={`${panel} space-y-4`}>
-                <h3 className="font-display text-lg font-semibold text-ink">
-                  Catat observasi baru
-                </h3>
+              <div className={`${panel()} space-y-4`}>
+                <h3 className={heading({ level: "sub", tone: "ink" })}>Catat observasi baru</h3>
                 <p className="text-sm text-muted">
                   Catatan ini tersimpan untuk perangkat {device.name}.
                 </p>
                 <ObservationForm deviceId={device.id} today={today} />
               </div>
             ) : (
-              <p className={`${panel} text-sm text-ink`}>
+              <p className={`${panel()} text-sm text-ink`}>
                 Akun viewer hanya bisa membaca observasi. Mencatat dan menghapus observasi hanya
                 bisa dilakukan admin ruang budidaya.
               </p>

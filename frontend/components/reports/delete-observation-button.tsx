@@ -1,8 +1,10 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react"
+
+import { useState } from "react"
 import { button } from "@/components/ui/styles"
+import { useConfirmFocus } from "@/hooks/use-confirm-focus"
 import { useDeleteObservation } from "@/hooks/use-observations"
 
 // The API has no undo for an observation, so the first press only asks and the
@@ -17,13 +19,7 @@ export function DeleteObservationButton({
   const router = useRouter()
   const remove = useDeleteObservation()
   const [confirming, setConfirming] = useState(false)
-  const confirmRef = useRef<HTMLFieldSetElement>(null)
-  // The confirmation step replaces the button that opened it, so focus would drop to
-  // the body. Moving it to the labelled group reads the question out and keeps the
-  // keyboard in place, without arming the destructive button under the next Enter.
-  useEffect(() => {
-    if (confirming) confirmRef.current?.focus()
-  }, [confirming])
+  const confirmRef = useConfirmFocus(confirming)
 
   if (!confirming) {
     return (

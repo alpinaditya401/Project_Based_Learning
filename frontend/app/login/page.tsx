@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import { LoginForm } from "@/components/auth/login-form"
-import { panel } from "@/components/ui/styles"
+import { brandLink, heading, panel, sentenceLink } from "@/components/ui/styles"
 import { getSession } from "@/lib/api/server"
 import { safeRedirect } from "@/lib/form"
 
@@ -20,13 +20,11 @@ export default async function LoginPage({
       id="konten"
       className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-10"
     >
-      <Link href="/" className="font-display text-lg font-bold text-deep-current">
+      <Link href="/" className={brandLink}>
         AquaSmart
       </Link>
-      <div className={`${panel} mt-6`}>
-        <h1 className="font-display text-2xl font-bold text-deep-current">
-          Selamat datang kembali
-        </h1>
+      <div className={`${panel()} mt-6`}>
+        <h1 className={heading({ level: "section" })}>Selamat datang kembali</h1>
         <p className="mt-2 text-sm text-muted">
           Masuk untuk memantau kualitas air dan perangkat budidaya Anda.
         </p>
@@ -36,10 +34,7 @@ export default async function LoginPage({
       </div>
       <p className="mt-6 text-center text-sm text-ink">
         Belum punya akun?{" "}
-        <Link
-          href="/register"
-          className="font-semibold text-deep-current underline underline-offset-4"
-        >
+        <Link href="/register" className={sentenceLink}>
           Buat akun di sini
         </Link>
       </p>

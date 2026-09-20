@@ -3,7 +3,7 @@ import { NoDevice } from "@/components/dashboard/no-device"
 import { ParameterCard } from "@/components/dashboard/parameter-card"
 import { ReadingsTable } from "@/components/dashboard/readings-table"
 import { DevicePicker } from "@/components/device-picker"
-import { panel } from "@/components/ui/styles"
+import { heading, panel } from "@/components/ui/styles"
 import { DevicesResponse, ReadingsResponse, ThresholdsResponse } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 import { pickDevice } from "@/lib/devices"
@@ -43,9 +43,7 @@ export default async function DashboardPage({
 
       <header className="space-y-3">
         <p className="text-sm text-muted">{device.location}</p>
-        <h1 className="font-display text-3xl font-bold text-deep-current">
-          Kualitas Air: {device.name}
-        </h1>
+        <h1 className={heading()}>Kualitas Air: {device.name}</h1>
         <p className="text-sm text-ink">
           {device.online ? "Perangkat online" : "Perangkat offline"}
           {device.last_seen
@@ -56,7 +54,7 @@ export default async function DashboardPage({
         <DevicePicker devices={devices} selectedId={device.id} basePath="/dashboard" />
       </header>
 
-      <section aria-labelledby="ringkasan" className={panel}>
+      <section aria-labelledby="ringkasan" className={panel()}>
         <h2 id="ringkasan" className="sr-only">
           Ringkasan status air
         </h2>
@@ -81,7 +79,7 @@ export default async function DashboardPage({
       </section>
 
       <section aria-labelledby="parameter" className="space-y-4">
-        <h2 id="parameter" className="font-display text-xl font-semibold text-ink">
+        <h2 id="parameter" className={heading({ level: "panel", tone: "ink" })}>
           Tiga parameter kualitas air
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -101,8 +99,8 @@ export default async function DashboardPage({
       </section>
 
       {outOfRange.length > 0 ? (
-        <section aria-labelledby="saran" className={panel}>
-          <h2 id="saran" className="font-display text-xl font-semibold text-ink">
+        <section aria-labelledby="saran" className={panel()}>
+          <h2 id="saran" className={heading({ level: "panel", tone: "ink" })}>
             Yang perlu diperiksa
           </h2>
           <ul className="mt-3 space-y-3">
@@ -117,11 +115,11 @@ export default async function DashboardPage({
       ) : null}
 
       <section aria-labelledby="riwayat" className="space-y-4">
-        <h2 id="riwayat" className="font-display text-xl font-semibold text-ink">
+        <h2 id="riwayat" className={heading({ level: "panel", tone: "ink" })}>
           Riwayat pembacaan terbaru
         </h2>
         {readings.length === 0 ? (
-          <p className={`${panel} text-sm text-muted`}>
+          <p className={`${panel()} text-sm text-muted`}>
             Belum ada pembacaan untuk perangkat ini. Riwayat muncul setelah perangkat mengirim data.
           </p>
         ) : (

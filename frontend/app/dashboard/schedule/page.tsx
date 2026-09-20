@@ -4,7 +4,7 @@ import { NoDevice } from "@/components/dashboard/no-device"
 import { DevicePicker } from "@/components/device-picker"
 import { DeleteScheduleButton } from "@/components/schedule/delete-schedule-button"
 import { ScheduleForm } from "@/components/schedule/schedule-form"
-import { panel } from "@/components/ui/styles"
+import { heading, inlineLink, panel } from "@/components/ui/styles"
 import { DevicesResponse, SchedulesResponse } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 import { pickDevice } from "@/lib/devices"
@@ -32,9 +32,7 @@ export default async function SchedulePage({
     <div className="space-y-8">
       <header className="space-y-3">
         <p className="text-sm text-muted">{device.location}</p>
-        <h1 className="font-display text-3xl font-bold text-deep-current">
-          Jadwal Pakan: {device.name}
-        </h1>
+        <h1 className={heading()}>Jadwal Pakan: {device.name}</h1>
         <p className="text-sm text-ink">
           Jam dalam WIB. Hasil setiap jadwal tercatat di riwayat perintah halaman Kontrol.
         </p>
@@ -43,8 +41,8 @@ export default async function SchedulePage({
 
       <SimulationNotice />
 
-      <section aria-labelledby="mode" className={panel}>
-        <h2 id="mode" className="font-display text-lg font-semibold text-ink">
+      <section aria-labelledby="mode" className={panel()}>
+        <h2 id="mode" className={heading({ level: "sub", tone: "ink" })}>
           Mode otomatis {device.auto ? "menyala" : "mati"}
         </h2>
         <p className="mt-1 text-sm text-ink">
@@ -52,20 +50,17 @@ export default async function SchedulePage({
             ? "Jadwal aktif di bawah dijalankan scheduler simulator pada jamnya."
             : "Jadwal tetap tersimpan, tetapi tidak dijalankan sampai Mode otomatis dinyalakan."}
         </p>
-        <Link
-          href={`/dashboard/control${query}`}
-          className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-deep-current underline underline-offset-4"
-        >
+        <Link href={`/dashboard/control${query}`} className={`mt-2 ${inlineLink}`}>
           {device.auto ? "Buka halaman Kontrol" : "Nyalakan di halaman Kontrol"}
         </Link>
       </section>
 
       <section aria-labelledby="daftar-jadwal" className="space-y-4">
-        <h2 id="daftar-jadwal" className="font-display text-xl font-semibold text-ink">
+        <h2 id="daftar-jadwal" className={heading({ level: "panel", tone: "ink" })}>
           Jadwal tersimpan
         </h2>
         {schedules.length === 0 ? (
-          <p className={`${panel} text-sm text-muted`}>
+          <p className={`${panel()} text-sm text-muted`}>
             Belum ada jadwal pakan untuk perangkat ini.
             {isAdmin ? " Tambahkan jadwal pertama dengan formulir di bawah." : ""}
           </p>
@@ -97,14 +92,14 @@ export default async function SchedulePage({
       </section>
 
       {isAdmin ? (
-        <section aria-labelledby="tambah-jadwal" className={`${panel} space-y-4`}>
-          <h2 id="tambah-jadwal" className="font-display text-xl font-semibold text-ink">
+        <section aria-labelledby="tambah-jadwal" className={`${panel()} space-y-4`}>
+          <h2 id="tambah-jadwal" className={heading({ level: "panel", tone: "ink" })}>
             Tambah jadwal
           </h2>
           <ScheduleForm deviceId={device.id} />
         </section>
       ) : (
-        <p className={`${panel} text-sm text-ink`}>
+        <p className={`${panel()} text-sm text-ink`}>
           Akun viewer hanya bisa melihat jadwal. Jadwal hanya bisa diubah admin ruang budidaya.
         </p>
       )}

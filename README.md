@@ -1,9 +1,30 @@
 # AquaSmart AIoT
 
 Sistem pemantauan kualitas air untuk akuakultur: pH, suhu, dan kekeruhan.
-Proyek Akhir Front-End, D3 Teknik Informatika, Sekolah Vokasi UNS.
 
-Pembimbing: Darmawan Lahru Riatma, S.Kom., M.MT.
+## Penyusun
+
+Proyek Akhir Praktikum Pemrograman Front-End, tahun akademik 2026.
+Program Studi D3 Teknik Informatika, Kampus Kabupaten Madiun,
+Sekolah Vokasi, Universitas Sebelas Maret.
+
+| Nama | NIM |
+| --- | --- |
+| Alpin Aditya Pratama | V3925004 |
+| Dimas Aryo Sejati | V3925022 |
+
+Dosen pembimbing: Darmawan Lahru Riatma, S.Kom., M.MT.
+
+## Hak cipta
+
+Hak cipta (c) 2026 Alpin Aditya Pratama dan Dimas Aryo Sejati. Seluruh hak
+dilindungi. Ketentuan lengkapnya ada di [LICENSE](LICENSE).
+
+Repositori ini publik semata-mata supaya penilai dapat memeriksa kode sumbernya.
+Sifat publik itu bukan izin penggunaan. Mengumpulkan karya ini atau turunannya
+sebagai karya sendiri adalah plagiarisme akademik. Riwayat commit Git di
+repositori ini mencatat tanggal, penulis, dan isi setiap perubahan, sehingga
+urutan pengerjaannya dapat diverifikasi secara independen.
 
 ## Status
 

@@ -50,7 +50,7 @@ Aplikasi web berjalan dan teruji secara lokal. Yang perlu dibaca apa adanya:
 | `01_AquaSmart/01_Aplikasi-Web/deploy/` | Dockerfile Apache dan mod_php untuk backend |
 | `01_AquaSmart/01_Aplikasi-Web/firmware/` | Sketsa ESP32 |
 | `01_AquaSmart/01_Aplikasi-Web/docs/` | Catatan perhitungan dan rujukan SKPL |
-| `frontend/` | Frontend Next.js 16 App Router, masih kerangka |
+| `frontend/` | Frontend Next.js 16 App Router: 10 rute, BFF ke backend PHP, design system |
 
 Struktur folder sengaja dipertahankan seperti di ruang kerja aslinya supaya
 perintah pada dokumen dan jalur di dalam test tetap berlaku tanpa penyesuaian.
@@ -59,8 +59,14 @@ perintah pada dokumen dan jalur di dalam test tetap berlaku tanpa penyesuaian.
 
 | Bagian | Tautan | Diperiksa |
 | --- | --- | --- |
-| Frontend Next.js | https://frontend-kappa-steel-78.vercel.app | 20 September 2026, HTTP 200 |
-| Backend PHP (REST) | https://projectbasedlearning-production.up.railway.app | 20 September 2026, `GET /api/rules` HTTP 200 |
+| Frontend Next.js | https://frontend-kappa-steel-78.vercel.app | 21 September 2026, HTTP 200 |
+| Backend PHP (REST) | https://projectbasedlearning-production.up.railway.app | 21 September 2026, `GET /api/rules` HTTP 200 |
+
+**Yang tayang di Vercel masih build lama.** Diperiksa 21 September 2026: halaman
+depan yang dilayani tautan di atas masih memuat kalimat "Halaman dan lapisan data
+belum dikerjakan", yaitu kerangka sebelum sepuluh rute aplikasi ditulis. Kode
+terbarunya ada di repositori dan lulus CI, tetapi Vercel belum di-deploy ulang.
+Jangan menilai kelengkapan fitur dari tautan itu sebelum deploy ulang dilakukan.
 
 Frontend berjalan di Vercel, backend di Railway. URL per-deployment Vercel berada
 di balik Deployment Protection; yang di atas adalah URL produksi yang terbuka.
@@ -76,9 +82,15 @@ build untuk `frontend/` dan `02_Praktikum-Frontend/modul-8/` pada setiap push da
 pull request. Job SonarQube berjalan hanya kalau secret `SONAR_TOKEN` sudah
 dipasang; tanpa itu langkahnya dilewati dengan pesan, bukan gagal.
 
+Gerbang yang benar-benar punya bukti adalah CI GitHub Actions. Lima kali
+dijalankan, seluruhnya hijau, termasuk pada commit terakhir `5c3ba6e`:
+
+![Daftar lima jalannya CI di GitHub Actions, semuanya berstatus sukses](01_AquaSmart/01_Aplikasi-Web/docs/gambar/ci-quality-gate-daftar.png)
+
 Konfigurasi pemindaian ada di `sonar-project.properties`. **Pemindaian SonarQube
-Cloud belum pernah dijalankan pada repo ini**, jadi status Quality Gate belum
-punya bukti dan tidak diklaim lulus.
+Cloud belum pernah dijalankan pada repo ini**, jadi status Quality Gate SonarQube
+belum punya bukti dan tidak diklaim lulus. Tangkapan layar di atas adalah gerbang
+CI, bukan Quality Gate SonarQube; keduanya tidak boleh ditukar saat dibaca.
 
 ## Menjalankan secara lokal
 
@@ -108,6 +120,20 @@ Frontend Next.js diperiksa dari `frontend/`:
 ```bash
 npm install && npm run build
 ```
+
+## Kesesuaian kontrak dan SKPL
+
+| Dokumen | Isi |
+| --- | --- |
+| [Ceklist kesesuaian](01_AquaSmart/01_Aplikasi-Web/docs/CEKLIST_KESESUAIAN_KONTRAK_SKPL.md) | D-01 sampai D-05, FR1 sampai FR24, dan NFR1 sampai NFR15 dipetakan ke status dan bukti di kode |
+| [Change Request CR-001](01_AquaSmart/01_Aplikasi-Web/docs/CR-001_Basis_Data_SQLite.md) | Basis data deployment v1 memakai SQLite, diajukan ke sponsor dan menunggu keputusan |
+| `docs/Laporan_Kesesuaian_Kontrak_dan_SKPL_AquaSmart.docx` | Kedua dokumen di atas dalam satu berkas siap kumpul |
+
+Hasil penilaian 21 September 2026 pada commit `5c3ba6e`: dari 44 butir, 8
+terpenuhi, 33 terpenuhi sebagian, 3 tidak dapat diverifikasi, dan tidak ada yang
+berstatus tidak terpenuhi. Butir yang tidak dapat diverifikasi adalah D-04
+prototipe hardware-edge, NFR2 uptime, dan NFR3 akurasi sensor; ketiganya
+memerlukan perangkat fisik atau jendela pengamatan yang tidak ada di repositori.
 
 ## Dokumen
 

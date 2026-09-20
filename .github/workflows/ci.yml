@@ -1,0 +1,83 @@
+name: CI
+
+# Gerbang verifikasi sebelum rilis: lint, pemeriksaan tipe, test, dan build.
+# Pemindaian SonarQube Cloud berjalan pada job terpisah dan hanya aktif kalau
+# secret SONAR_TOKEN sudah dipasang, supaya fork dan checkout sebelum token ada
+# tidak gagal karena hal yang bukan kesalahan kode.
+
+on:
+  push:
+    branches: [main, publish]
+  pull_request:
+    branches: [main, publish]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend Next.js
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+
+      - name: Lint (Biome)
+        run: npx biome check .
+
+      - name: Pemeriksaan tipe
+        run: npx tsc --noEmit
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        # Build sengaja gagal tanpa variabel ini. Nilainya adalah backend PHP
+        # produksi; tidak ada rahasia di dalamnya, jadi boleh ditulis langsung.
+        env:
+          AQUASMART_API_URL: https://projectbasedlearning-production.up.railway.app
+        run: npm run build
+
+  sonarqube:
+    name: SonarQube Quality Gate
+    needs: [frontend]
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    steps:
+      - name: Lewati kalau token belum dipasang
+        if: env.SONAR_TOKEN == ''
+        run: |
+          echo "Secret SONAR_TOKEN belum ada. Pemindaian dilewati."
+          echo "Pasang di Settings > Secrets and variables > Actions, lalu jalankan ulang."
+
+      - uses: actions/checkout@v4
+        if: env.SONAR_TOKEN != ''
+        with:
+          # Sonar memakai riwayat untuk menentukan kode baru pada analisis PR.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: env.SONAR_TOKEN != ''
+        with:
+          node-version: 24
+
+      - name: Pindai
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-scan-action@v4
+
+      - name: Tunggu hasil Quality Gate
+        if: env.SONAR_TOKEN != ''
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5

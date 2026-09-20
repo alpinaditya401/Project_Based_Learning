@@ -12,6 +12,12 @@
 !/frontend/
 !/01_AquaSmart/
 
+# Dua berkas ini diminta eksplisit oleh brief Proyek Akhir: repo publik wajib
+# memuat sonar-project.properties dan .github/workflows/ci.yml. Keduanya tidak
+# memuat rahasia; token SonarQube dibaca dari secret GitHub, bukan dari berkas.
+!/.github/
+!/sonar-project.properties
+
 /01_AquaSmart/*
 !/01_AquaSmart/01_Aplikasi-Web/
 

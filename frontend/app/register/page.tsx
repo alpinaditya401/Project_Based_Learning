@@ -1,19 +1,13 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { LoginForm } from "@/components/auth/login-form"
+import { RegisterForm } from "@/components/auth/register-form"
 import { panel } from "@/components/ui/styles"
 import { getSession } from "@/lib/api/server"
-import { safeRedirect } from "@/lib/form"
 
-export const metadata = { title: "Masuk | AquaSmart" }
+export const metadata = { title: "Daftar Akun | AquaSmart" }
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ redirect?: string }>
-}) {
-  const redirectTo = safeRedirect((await searchParams).redirect)
-  if (await getSession()) redirect(redirectTo)
+export default async function RegisterPage() {
+  if (await getSession()) redirect("/dashboard")
 
   return (
     <main
@@ -24,23 +18,22 @@ export default async function LoginPage({
         AquaSmart
       </Link>
       <div className={`${panel} mt-6`}>
-        <h1 className="font-display text-2xl font-bold text-deep-current">
-          Selamat datang kembali
-        </h1>
+        <h1 className="font-display text-2xl font-bold text-deep-current">Buat akun AquaSmart</h1>
         <p className="mt-2 text-sm text-muted">
-          Masuk untuk memantau kualitas air dan perangkat budidaya Anda.
+          Akun yang dibuat di sini menjadi admin ruang budidayanya sendiri. Anda yang menghubungkan
+          perangkat, mengatur ambang batas air, dan mengundang anggota lain sebagai viewer.
         </p>
         <div className="mt-6">
-          <LoginForm redirectTo={redirectTo} />
+          <RegisterForm />
         </div>
       </div>
       <p className="mt-6 text-center text-sm text-ink">
-        Belum punya akun?{" "}
+        Sudah punya akun?{" "}
         <Link
-          href="/register"
+          href="/login"
           className="font-semibold text-deep-current underline underline-offset-4"
         >
-          Buat akun di sini
+          Masuk di sini
         </Link>
       </p>
     </main>

@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
-/* Token diturunkan dari web/assets/css/app.css, bukan palet baru. Nilai hex harus
-   tetap identik supaya SPA lama dan frontend Next.js tidak berbeda warna.
-   Varian *-text dipakai untuk teks di atas latar terang: kontrasnya sudah pernah
-   diperbaiki di aplikasi lama, sedangkan warna dasarnya hanya untuk bidang/ikon. */
+/* Tokens copied from web/assets/css/app.css, not a new palette: the hex values must
+   stay identical so the old SPA and this frontend never drift apart. The *-text
+   variants carry text on light backgrounds; the base hues are for fills and icons.
+   foam-line reaches only 1.26:1 against surface-white, so it may separate panels
+   but must never be the only boundary of a control. Inputs use muted (5.74:1). */
 @theme {
   --color-ink: #10262a;
   --color-deep-current: #0e2a30;
@@ -32,11 +33,11 @@
 
   --shadow-elevated: 0 8px 24px -6px rgb(14 42 48 / 0.18);
 
-  --spacing-content: 1180px;
+  --container-content: 1180px;
 }
 
-/* DESIGN.md menolak dark mode secara sadar, jadi tidak ada blok
-   prefers-color-scheme maupun varian .dark di sini. Itu bukan kelalaian. */
+/* DESIGN.md rejects dark mode on purpose, so there is no prefers-color-scheme block
+   and no .dark variant. That is a decision, not an omission. */
 
 body {
   background-color: var(--color-foam);
@@ -44,8 +45,30 @@ body {
   font-family: var(--font-body);
 }
 
-/* Dipakai app/dashboard/loading.tsx. Ditulis sebagai CSS biasa, bukan @apply,
-   supaya kelasnya tetap ada walau daftar utility Tailwind berubah. */
+/* One focus style for every interactive element. deep-current on foam is 13.71:1,
+   well above the 3:1 non-text minimum. */
+:focus-visible {
+  outline: 3px solid var(--color-deep-current);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  z-index: 50;
+  padding: 0.75rem 1rem;
+  background: var(--color-deep-current);
+  color: var(--color-foam);
+  border-radius: var(--radius-crisp);
+}
+
+.skip-link:focus-visible {
+  top: 0.5rem;
+}
+
+/* Used by the loading.tsx files. Plain CSS rather than @apply so the class survives
+   changes to Tailwind's utility list. */
 .skeleton {
   background-color: var(--color-bg-deep);
   border-radius: var(--radius-crisp);

@@ -18,6 +18,10 @@
 !/.github/
 !/sonar-project.properties
 
+# Pernyataan hak cipta. Repo ini publik demi penilaian, bukan demi pemakaian
+# ulang, dan LICENSE yang menyatakan batas itu harus ikut terbaca.
+!/LICENSE
+
 /01_AquaSmart/*
 !/01_AquaSmart/01_Aplikasi-Web/
 

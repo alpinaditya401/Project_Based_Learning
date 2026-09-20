@@ -34,6 +34,31 @@ Aplikasi web berjalan dan teruji secara lokal. Yang perlu dibaca apa adanya:
 Struktur folder sengaja dipertahankan seperti di ruang kerja aslinya supaya
 perintah pada dokumen dan jalur di dalam test tetap berlaku tanpa penyesuaian.
 
+## Deployment aktif
+
+| Bagian | Tautan | Diperiksa |
+| --- | --- | --- |
+| Frontend Next.js | https://frontend-kappa-steel-78.vercel.app | 20 September 2026, HTTP 200 |
+| Backend PHP (REST) | https://projectbasedlearning-production.up.railway.app | 20 September 2026, `GET /api/rules` HTTP 200 |
+
+Frontend berjalan di Vercel, backend di Railway. URL per-deployment Vercel berada
+di balik Deployment Protection; yang di atas adalah URL produksi yang terbuka.
+
+`GET /api/rules` adalah satu-satunya endpoint yang memasang
+`Access-Control-Allow-Origin: *`. Endpoint lain butuh cookie sesi dan tidak
+boleh dipanggil lintas origin.
+
+## Gerbang kualitas kode
+
+`.github/workflows/ci.yml` menjalankan lint Biome, pemeriksaan tipe, test, dan
+build untuk `frontend/` dan `02_Praktikum-Frontend/modul-8/` pada setiap push dan
+pull request. Job SonarQube berjalan hanya kalau secret `SONAR_TOKEN` sudah
+dipasang; tanpa itu langkahnya dilewati dengan pesan, bukan gagal.
+
+Konfigurasi pemindaian ada di `sonar-project.properties`. **Pemindaian SonarQube
+Cloud belum pernah dijalankan pada repo ini**, jadi status Quality Gate belum
+punya bukti dan tidak diklaim lulus.
+
 ## Menjalankan secara lokal
 
 Butuh PHP 8.2 atau lebih baru dan Python 3.11. Dari `01_AquaSmart/01_Aplikasi-Web`:

@@ -6,6 +6,7 @@ import { APP_KEY, apiMode, loadState, SESSION_KEY, setApiMode, setState, state }
 import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 import { landingPage, loginPage, registerPage } from './views-public.js';
+import { diagnosticPanel, provenanceBadge, rowSource, sourceCountsView, sourceNames } from './provenance.js';
 (() => {
   'use strict';
 
@@ -90,18 +91,6 @@ import { landingPage, loginPage, registerPage } from './views-public.js';
     };
   }
 
-  const sourceNames = {simulation:'Simulation', device:'Device', manual:'Manual', seed:'Seed', legacy_unverified:'Legacy / belum diketahui'};
-  function provenanceBadge(source) {
-    const key = Object.hasOwn(sourceNames, source) ? source : 'legacy_unverified';
-    return `<span class="badge provenance-badge" data-provenance="${key}">${sourceNames[key]}</span>`;
-  }
-  function rowSource(row) { return apiMode === 'api' ? (row?.provenance || 'legacy_unverified') : 'simulation'; }
-  function sourceCountsView(counts) {
-    return `<div class="provenance-counts">${Object.keys(sourceNames).map(key=>`<span>${provenanceBadge(key)} <strong>${Number(counts?.[key] || 0)}</strong></span>`).join('')}</div>`;
-  }
-  function diagnosticPanel() {
-    return apiMode !== 'api' ? '' : `<section class="settings-card neu-card col-12"><h2>Diagnostik telemetry mentah</h2><p>PLACEHOLDER SENSOR TANAH, BUKAN pH AIR TERKALIBRASI. Mapping turbidity bukan NTU.</p><div id="raw-telemetry" role="status">Memuat telemetry...</div></section>`;
-  }
   async function loadDiagnostics() {
     const panel=qs('#raw-telemetry'); if (!panel) return;
     try {

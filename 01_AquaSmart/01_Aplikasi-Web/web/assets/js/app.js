@@ -3,6 +3,7 @@ import { app, escapeHtml, modalRoot, navigate, qs, qsa, route } from './dom.js';
 import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 import { showModal, toast } from './ui-overlay.js';
 import { APP_KEY, loadState, SESSION_KEY, setState, state } from './state-store.js';
+import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 (() => {
   'use strict';
@@ -110,64 +111,6 @@ import { APP_KEY, loadState, SESSION_KEY, setState, state } from './state-store.
       const counts=Object.fromEntries(Object.keys(sourceNames).map(key=>[key,rows.filter(row=>row.provenance===key).length]));
       panel.innerHTML=sourceCountsView(counts)+(rows.length?`<div class="table-wrap" tabindex="0" role="region" aria-label="Telemetry mentah"><table><thead><tr><th>UTC / sesi</th><th>Sumber</th><th>Suhu / status</th><th>Turbidity ADC / mV / sensor mV</th><th>Mapping %</th><th>pH tanah ADC / mV</th></tr></thead><tbody>${rows.map(row=>`<tr><td>${escapeHtml(row.created_at)}<br>${escapeHtml(row.source_session)}</td><td>${provenanceBadge(row.provenance)}</td><td>${row.temperature??'—'} / ${escapeHtml(row.temperature_status)}</td><td>${row.turbidity_adc??'—'} / ${row.turbidity_mv??'—'} / ${row.turbidity_sensor_mv??'—'}</td><td>${row.turbidity_mapping_percent??'—'}</td><td>${row.soil_ph_adc??'—'} / ${row.soil_ph_mv??'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p>Belum ada telemetry mentah. Tidak ada nilai sensor yang dibuat otomatis.</p>');
     } catch(error) {if(panel.isConnected)panel.textContent=`Telemetry gagal dimuat: ${error.message}`;}
-  }
-
-  function mapServerDevice(device) {
-    const reading = device.latest_reading || {};
-    return {
-      id: device.id,
-      name: device.name,
-      location: device.location,
-      ph: reading.ph == null ? null : Number(reading.ph),
-      temp: reading.temperature == null ? null : Number(reading.temperature),
-      turbidity: reading.turbidity == null ? null : Number(reading.turbidity),
-      online: Boolean(device.online),
-      aerator: Boolean(device.aerator),
-      feeder: Boolean(device.feeder),
-      auto: Boolean(device.auto),
-      lastSeen: device.last_seen || reading.created_at || null,
-      provenance: reading.provenance || 'legacy_unverified', source_session: reading.source_session || null,
-      simulation: Boolean(reading.simulation)
-    };
-  }
-
-  function mapServerReading(reading) {
-    return {
-      time: reading.time,
-      ph: Number(reading.ph),
-      temp: Number(reading.temperature),
-      turbidity: Number(reading.turbidity),
-      provenance: reading.provenance || 'legacy_unverified', source_session: reading.source_session || null,
-      simulation: Boolean(reading.simulation)
-    };
-  }
-
-  function alertTitle(alert) {
-    if (alert.severity === 'critical') return 'Kondisi air membutuhkan tindakan';
-    if (alert.severity === 'warning') return 'Parameter kualitas air perlu dipantau';
-    return 'Aktivitas sistem selesai';
-  }
-
-  function mapServerAlert(alert) {
-    const device = state.devices.find(item => item.id === alert.device_id);
-    return {
-      id: Number(alert.id),
-      deviceId: alert.device_id,
-      level: alert.severity, provenance: alert.provenance,
-      title: alertTitle(alert),
-      message: `${device?.name || alert.device_id} · ${alert.source || 'UNVERIFIED'} · ${alert.message}`,
-      time: formatTime(alert.created_at),
-      read: Boolean(alert.acknowledged)
-    };
-  }
-
-  function mapServerAuditLog(log) {
-    return {
-      id: Number(log.id),
-      action: log.action, provenance: log.provenance,
-      metadata: log.metadata || {},
-      time: formatTime(log.created_at)
-    };
   }
 
   function useDemoMode() {

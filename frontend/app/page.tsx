@@ -1,6 +1,6 @@
 import { Bell, CalendarClock, FileBarChart, Gauge } from "lucide-react"
 import Link from "next/link"
-import { button, panel } from "@/components/ui/styles"
+import { button, heading, inlineLink, panel } from "@/components/ui/styles"
 import { getSession } from "@/lib/api/server"
 
 // The public page a farmer or a reviewer lands on. It explains what the system
@@ -55,7 +55,7 @@ export default async function Home() {
 
       <header className="border-b border-foam-line bg-surface-white">
         <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <span className="font-display text-lg font-bold text-deep-current">AquaSmart AIoT</span>
+          <span className={heading({ level: "sub" })}>AquaSmart AIoT</span>
           <nav aria-label="Masuk akun" className="flex flex-wrap items-center gap-2">
             {session ? (
               <Link href="/dashboard" className={button()}>
@@ -77,9 +77,7 @@ export default async function Home() {
 
       <main id="konten" tabIndex={-1} className="mx-auto max-w-content px-4 py-10 sm:px-6 sm:py-14">
         <section className="max-w-2xl">
-          <h1 className="font-display text-3xl font-bold text-deep-current sm:text-4xl">
-            Pantau kualitas air kolam dari satu halaman
-          </h1>
+          <h1 className={heading()}>Pantau kualitas air kolam dari satu halaman</h1>
           <p className="mt-4 text-lg text-ink">
             AquaSmart mencatat pH, suhu, dan kekeruhan air budidaya, menyimpan riwayatnya, dan
             memberi peringatan saat pembacaan keluar dari batas yang Anda tetapkan.
@@ -100,13 +98,13 @@ export default async function Home() {
         </section>
 
         <section aria-labelledby="parameter" className="mt-14">
-          <h2 id="parameter" className="font-display text-2xl font-bold text-deep-current">
+          <h2 id="parameter" className={heading({ level: "section" })}>
             Tiga parameter yang dicatat
           </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {PARAMETERS.map((parameter) => (
-              <article key={parameter.label} className={panel}>
-                <h3 className="font-display text-lg font-semibold text-ink">{parameter.label}</h3>
+              <article key={parameter.label} className={panel()}>
+                <h3 className={heading({ level: "sub", tone: "ink" })}>{parameter.label}</h3>
                 <p className="mt-2 text-sm text-ink">{parameter.body}</p>
               </article>
             ))}
@@ -114,15 +112,15 @@ export default async function Home() {
         </section>
 
         <section aria-labelledby="fitur" className="mt-14">
-          <h2 id="fitur" className="font-display text-2xl font-bold text-deep-current">
+          <h2 id="fitur" className={heading({ level: "section" })}>
             Yang bisa dikerjakan di dashboard
           </h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {FEATURES.map(({ icon: Icon, title, body }) => (
-              <li key={title} className={`${panel} flex gap-4`}>
+              <li key={title} className={`${panel()} flex gap-4`}>
                 <Icon aria-hidden="true" className="size-6 shrink-0 text-clear-water-text" />
                 <div>
-                  <h3 className="font-display text-lg font-semibold text-ink">{title}</h3>
+                  <h3 className={heading({ level: "sub", tone: "ink" })}>{title}</h3>
                   <p className="mt-1 text-sm text-ink">{body}</p>
                 </div>
               </li>
@@ -130,11 +128,8 @@ export default async function Home() {
           </ul>
         </section>
 
-        <section
-          aria-labelledby="status"
-          className="mt-14 rounded-panel border-2 border-sediment-text bg-surface-white p-5 sm:p-6"
-        >
-          <h2 id="status" className="font-display text-2xl font-bold text-sediment-text">
+        <section aria-labelledby="status" className={panel({ tone: "notice", className: "mt-14" })}>
+          <h2 id="status" className={heading({ level: "section", tone: "warning" })}>
             Status pengembangan
           </h2>
           <p className="mt-3 max-w-prose text-ink">
@@ -163,10 +158,7 @@ export default async function Home() {
       <footer className="border-t border-foam-line bg-surface-white">
         <div className="mx-auto flex max-w-content flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-muted sm:px-6">
           <p>AquaSmart AIoT. Pemantauan kualitas air akuakultur.</p>
-          <Link
-            href="/login"
-            className="min-h-11 content-center font-medium text-deep-current underline underline-offset-4"
-          >
+          <Link href="/login" className={inlineLink}>
             Masuk ke dashboard
           </Link>
         </div>

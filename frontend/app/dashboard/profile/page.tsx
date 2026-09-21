@@ -1,7 +1,7 @@
 import { LogoutButton } from "@/components/app-shell/logout-button"
 import { JoinWorkspaceForm } from "@/components/profile/join-workspace-form"
 import { ProfileForm } from "@/components/profile/profile-form"
-import { panel } from "@/components/ui/styles"
+import { heading, panel } from "@/components/ui/styles"
 import { DevicesResponse, type User, Workspace } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 
@@ -93,14 +93,14 @@ export default async function ProfilePage() {
     <div className="space-y-8">
       <header className="space-y-3">
         <p className="text-sm text-muted">Profil akun</p>
-        <h1 className="font-display text-3xl font-bold text-deep-current">{user.name}</h1>
+        <h1 className={heading()}>{user.name}</h1>
         <p className="max-w-prose text-sm text-ink">
           Masuk sebagai {user.username}. Nama dan nomor telepon bisa diubah di halaman ini.
         </p>
       </header>
 
-      <section aria-labelledby="ringkasan-akun" className={`${panel} space-y-4`}>
-        <h2 id="ringkasan-akun" className="font-display text-xl font-semibold text-ink">
+      <section aria-labelledby="ringkasan-akun" className={`${panel()} space-y-4`}>
+        <h2 id="ringkasan-akun" className={heading({ level: "panel", tone: "ink" })}>
           Ringkasan akun
         </h2>
         <dl className="divide-y divide-foam-line">
@@ -114,9 +114,9 @@ export default async function ProfilePage() {
         <p className="max-w-prose text-sm text-muted">{ROLE_SCOPE[user.role]}</p>
       </section>
 
-      <section aria-labelledby="ubah-profil" className={`${panel} space-y-4`}>
+      <section aria-labelledby="ubah-profil" className={`${panel()} space-y-4`}>
         <div className="space-y-1">
-          <h2 id="ubah-profil" className="font-display text-xl font-semibold text-ink">
+          <h2 id="ubah-profil" className={heading({ level: "panel", tone: "ink" })}>
             Ubah nama dan nomor telepon
           </h2>
           <p className="max-w-prose text-sm text-muted">
@@ -128,9 +128,9 @@ export default async function ProfilePage() {
         <ProfileForm name={user.name} phone={user.phone} />
       </section>
 
-      <section aria-labelledby="gabung-ruang" className={`${panel} space-y-4`}>
+      <section aria-labelledby="gabung-ruang" className={`${panel()} space-y-4`}>
         <div className="space-y-2">
-          <h2 id="gabung-ruang" className="font-display text-xl font-semibold text-ink">
+          <h2 id="gabung-ruang" className={heading({ level: "panel", tone: "ink" })}>
             Gabung ke ruang budidaya
           </h2>
           <p className="max-w-prose text-sm text-ink">
@@ -156,8 +156,8 @@ export default async function ProfilePage() {
         )}
       </section>
 
-      <section aria-labelledby="keluar-akun" className={`${panel} space-y-3`}>
-        <h2 id="keluar-akun" className="font-display text-xl font-semibold text-ink">
+      <section aria-labelledby="keluar-akun" className={`${panel()} space-y-3`}>
+        <h2 id="keluar-akun" className={heading({ level: "panel", tone: "ink" })}>
           Keluar akun
         </h2>
         <p className="max-w-prose text-sm text-ink">

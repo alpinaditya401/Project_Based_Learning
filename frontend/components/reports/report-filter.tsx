@@ -1,5 +1,6 @@
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import type { Device } from "@/lib/api/schemas"
 
 const DATE_HINT = "Tanggal ini menentukan hari, minggu, atau bulan yang dihitung."
@@ -27,7 +28,7 @@ export function ReportFilter({
             id="report-device"
             name="device_id"
             defaultValue={value.device_id}
-            className={input}
+            className={control()}
           >
             {devices.map((device) => (
               <option key={device.id} value={device.id}>
@@ -39,17 +40,21 @@ export function ReportFilter({
 
         <Field id="report-date" label="Tanggal (UTC)" hint={DATE_HINT}>
           <input
-            id="report-date"
             name="date"
             type="date"
             defaultValue={value.date}
-            className={input}
-            aria-describedby={describedBy("report-date", DATE_HINT)}
+            className={control()}
+            {...fieldProps("report-date", { hint: DATE_HINT })}
           />
         </Field>
 
         <Field id="report-period" label="Periode">
-          <select id="report-period" name="period" defaultValue={value.period} className={input}>
+          <select
+            id="report-period"
+            name="period"
+            defaultValue={value.period}
+            className={control()}
+          >
             {PERIODS.map((period) => (
               <option key={period.value} value={period.value}>
                 {period.label}

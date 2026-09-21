@@ -1,31 +1,33 @@
 # AquaSmart AIoT — laporan review dan penyelesaian lokal
 
-## Lanjutan produk A–D: fondasi, belum integrasi
+## Lanjutan produk A–D: integrasi software sebagian (A–C), Web Push belum
 
-16 September 2026: mockup seluruh state untuk penjual, klaim, onboarding, dashboard dan Web Push tersedia melalui `mockups/index.html`; review internal di `mockups/REVIEW.md`. `docs/KALKULASI.md` mencatat enam kelompok formula/threshold dan asumsi baru. `docs/KONTRAK_PRODUK.md` menyatakan kontrak endpoint yang **belum aktif**.
+16 September 2026: mockup seluruh state untuk penjual, klaim, onboarding, dashboard dan Web Push tersedia melalui `mockups/index.html`; review internal di `mockups/REVIEW.md`. `docs/KALKULASI.md` mencatat enam kelompok formula/threshold dan asumsi baru. `docs/KONTRAK_PRODUK.md` menyatakan kontrak endpoint yang **belum aktif**; dokumen itu belum diperbarui setelah lima endpointnya diaktifkan di `server/product_routes.php` dengan cakupan kontrak sebagian (tanpa QR, reissue, pump config dan jadwal), sedangkan empat endpoint `/api/push/*` belum ada.
 
-Evidence baru: 21 pemeriksaan mockup dan 48 boundary checks policy lulus (`product-mockups-20260916/results.json` serta `policy-results.json` pada review-hermes); satu unittest wrapper pass. Policy config/class belum mengubah router atau database aktif. Full regression historis di bawah belum diulang untuk integrasi karena integrasi A–D belum dibuat.
+Evidence baru: 21 pemeriksaan mockup dan 48 boundary checks policy lulus (`product-mockups-20260916/results.json` serta `policy-results.json` pada review-hermes); satu unittest wrapper pass. Saat bagian ini ditulis pada 16 September, policy config/class belum mengubah router atau database aktif; kini `server/router.php:55` memuat `product_routes.php` yang memakai `ProductPolicy`, dan `Database.php:178` memanggil `ProductRepository::migrate` saat koneksi dibuka, tetapi database aktif `server/data/aquasmart.sqlite` (terakhir diubah 15 September) belum memuat tabel produk karena aplikasi belum dijalankan lagi terhadapnya (diperiksa 21 September 2026). Integrasi sebagian A–C tercakup gerbang 21 September 2026: 4 tes `test_product_api` ada di dalam 104 tes backend dan suite `product_live` (10 assertion) ada di dalam 26 suite browser; Web Push (D) belum dibuat.
 
 | Bagian | Selesai | Belum selesai |
 |---|---|---|
-| A Provisioning | Mockup, formula kode/expiry/lockout, kontrak penjual terpisah | Schema, API, QR nyata, secret handoff, collision/concurrency tests |
-| B Klaim/onboarding | Mockup semua state, aturan waiting berbeda online | Atomic claim, bypass legacy, kamera/manual aktif, integrasi dan race tests |
-| C Dashboard | Mockup, policy freshness/expiry/durasi/WIB | Dashboard aktif, pump mode, schedule/command integration, switch race tests |
+| A Provisioning | Mockup, formula kode/expiry/lockout, kontrak penjual terpisah; schema `product_units`/`seller_operators` di kode (belum diterapkan ke database aktif), API `/api/seller/units`, artefak secret handoff lokal di luar web root (perlu `AQUASMART_DEVICE_HANDOFF_DIR`), label tanpa QR, uji collision/rollback dan klaim bersamaan (`test_product_api`) | QR nyata, secret handoff ke perangkat fisik |
+| B Klaim/onboarding | Mockup semua state, aturan waiting berbeda online; `POST /api/units/claim` dengan lockout, bypass register/claim lama ditutup (`Auth.php:101`, `DeviceLifecycle.php:9`), input manual aktif di `web/units.html`, uji klaim bersamaan | Kamera/QR scan, provisioning WiFi, uji perangkat fisik |
+| C Dashboard | Mockup, policy freshness/expiry/durasi/WIB; `GET /api/units/{id}/dashboard` (suhu, histori, status command), API perintah pompa/feeder hanya kanal simulasi (hanya feeder yang diuji; kanal lain 503 `hardware_pending`; tombol uji di UI nonaktif), uji ganti unit terlambat di `product_live` | Pump mode, integrasi jadwal, aktuasi fisik |
 | D Web Push | Mockup izin/error, policy debounce unit-tested | Subscription API, VAPID/transport/outbox, service worker dan push nyata |
 
 Tidak mengubah FR01/FR07–FR09, firmware, atau provenance data existing. Checklist penerimaan end-to-end belum ditandai selesai. Detail langkah lanjut pada CHECKPOINT.md.
 
-## Hasil terbaru: 16 September 2026
+## Hasil pengujian: gerbang 21 September 2026 dan riwayat 16 September 2026
 
-Implementasi software lokal diuji ulang: **96 tes backend, 30 lint PHP, 24 suite browser lulus** (368 assertion JSON + 7 SW stdout). Evidence `backend-regression-20260916-102137` dan `frontend-fixes-regression-20260916-102137` pada folder review-hermes. Tidak ada failure/error/skip backend.
+Gerbang terbaru 21 September 2026: **104 tes backend, 37 lint PHP, 26 suite browser lulus** (399 assertion JSON + 7 SW stdout, 0 gagal), artefak `test-output/backend-regression-20260921-144157/` dan `test-output/frontend-fixes-regression-20260921-143912/`. `test-output/` tidak di-commit, jadi artefak ini hanya ada di mesin lokal. Perubahan sejak 16 September yang memengaruhi cara membaca laporan ini: `web/assets/js/app.js` dipecah menjadi 14 modul ES dan dimuat dengan `type="module"`, sehingga `index.html` tidak lagi bisa dibuka langsung lewat `file://` (jalur resmi tetap `python server/run_local.py`); keluaran runner test pindah dari `review-hermes` ke `test-output/`; audit WCAG 2.2 AA dijalankan (`web/tests/WCAG_AUDIT_2026-09-21.md`). Kontrol perangkat tetap SIMULASI dan bukti ESP32 fisik tetap belum ada.
 
-PWA dilengkapi PNG 192/512, ikon Apple 180, identity/scope eksplisit dan precache v5, memakai logo existing. Ukuran/decode/cache ikon serta installability diuji. Navigasi demo tetap di luar area scroll; 11 viewport dan semua frame dua alur diperiksa oleh runner rutin. HTTPS LAN IP terkini 192.168.8.170 dipercaya browser Windows: 4 pemeriksaan lulus di `software-final-https-20260916`; TLS1.3, CA salah dan hostname salah diuji ulang melalui check_local_tls.py.
+Pada 16 September implementasi software lokal diuji ulang: **96 tes backend, 30 lint PHP, 24 suite browser lulus** (368 assertion JSON + 7 SW stdout). Evidence `backend-regression-20260916-102137` dan `frontend-fixes-regression-20260916-102137` pada folder review-hermes. Tidak ada failure/error/skip backend.
+
+PWA dilengkapi PNG 192/512, ikon Apple 180, identity/scope eksplisit dan precache v5, memakai logo existing. Ukuran/decode/cache ikon serta installability diuji. Navigasi demo tetap di luar area scroll; 11 viewport dan semua frame dua alur diperiksa oleh runner rutin. HTTPS LAN IP saat itu 192.168.8.170 dipercaya browser Windows: 4 pemeriksaan lulus di `software-final-https-20260916`; TLS1.3, CA salah dan hostname salah diuji ulang melalui check_local_tls.py.
 
 Panduan ringkas: SOFTWARE_HANDOVER.md. Database aktif tidak diseed/migrasi ulang. Firmware dan status hardware tidak berubah. Instalasi PWA fisik Android/iOS, Safari/Firefox, uptime serta retensi durasi nyata belum terbukti; FR23/NFR05 tetap PARTIAL. Hasil di bawah merupakan riwayat jika berbeda dari ringkasan ini.
 
 Pembaruan 16 September: IP LAN berubah menjadi 192.168.8.170; layanan dan sertifikat sudah diperbarui, tes TLS positif/negatif pada IP baru lulus. Android tersedia menurut pengguna; hasil akses dan instalasi fisik masih menunggu pengujian. FR23/NFR05 tetap PARTIAL; status FR01/FR07–09 dan hardware tidak berubah. Detail operasional terbaru di CHECKPOINT.md dan LOCAL_GUIDE.md.
 
-Status terbaru sesi software malam 15 September: **96 tes backend pass, 23 suite browser pass, migrasi database aktif berhasil, TLS local CA teruji**. NFR15 VERIFIED (software), NFR05 PARTIAL, FR23 tetap PARTIAL. FR01/FR07–09 dan seluruh status hardware tidak berubah. Bagian audit awal di bawah adalah riwayat; hasil terbaru ada di bagian “Penyelesaian software lokal”.
+Status sesi software malam 15 September (riwayat): **96 tes backend pass, 23 suite browser pass, migrasi database aktif berhasil, TLS local CA teruji**. NFR15 VERIFIED (software), NFR05 PARTIAL, FR23 tetap PARTIAL. FR01/FR07–09 dan seluruh status hardware tidak berubah. Bagian audit awal di bawah adalah riwayat; hasil sesi malam itu ada di bagian “Penyelesaian software lokal”, sedangkan gerbang terbaru 21 September 2026 ada di bagian hasil pengujian di atas.
 
 ## 1. Metadata
 
@@ -91,9 +93,9 @@ Status awal sesi adalah UNVERIFIED sampai bukti dikumpulkan. VERIFIED di bawah t
 | FR20 | Agregasi laporan — stretch | VERIFIED | test_reports/calendar: harian/mingguan/bulanan UTC, leap year, empty, error dan sumber. |
 | FR21 | Ekspor CSV/JSON — stretch | VERIFIED | test_export 4 tes: 5 jenis data, filter, actual feeding rows, CSV formula, batas tanggal/ownership; review_export actual download. |
 | FR22 | UI login/dashboard/settings | VERIFIED | Delapan route aktif dapat dinavigasi; state dan kontrol browser diuji. |
-| FR23 | PWA installable basic | PARTIAL | Manifest/SW/installability Edge lulus pada HTTPS LAN dipercaya; install HP/Safari/Firefox belum diuji karena platform tidak tersedia, rule firewall LAN ditolak hak admin. |
+| FR23 | PWA installable basic | PARTIAL | Manifest/SW/installability Edge lulus pada HTTPS LAN dipercaya; install HP/Safari/Firefox belum diuji (Android tersedia menurut pengguna sejak 16 September, hasil ujinya belum ada; platform lain tidak tersedia), rule firewall LAN ditolak hak admin. |
 | FR24 | Audit who/what/when | VERIFIED | Audit user/device/time untuk auth, lifecycle, threshold, command/scheduler/ACK, observasi, profil dan workspace. |
-| NFR01 | TTFB lokal <2 detik | VERIFIED | 10 sampel GET devices: full response maksimum 31,17 ms; bukti terbatas mesin/test lokal ini. |
+| NFR01 | TTFB lokal <2 detik | VERIFIED | 10 sampel GET devices, dengan batas lulus maksimum di bawah 2 detik (`test_operability`); pada gerbang 21 September 2026 nilai maksimumnya 31,74 ms. Nilai milidetik hanya dicetak ke stdout, tidak disimpan di artefak; angka 31,17 ms dari sesi sebelumnya juga tidak tersimpan. Bukti terbatas mesin/test lokal ini. |
 | NFR02 | Uptime lokal ≥90% | UNVERIFIED | Tidak ada jendela observasi availability yang memadai; test singkat bukan uptime. |
 | NFR03 | Akurasi pH ±0,2 / suhu ±0,5°C | UNVERIFIED | Membutuhkan sensor fisik, referensi ukur dan kalibrasi. |
 | NFR04 | Password hashing PHP | VERIFIED | password_hash/password_verify; Argon2id bila tersedia, credential seed acak hanya runtime. |
@@ -102,10 +104,10 @@ Status awal sesi adalah UNVERIFIED sampai bukti dikumpulkan. VERIFIED di bawah t
 | NFR07 | Rate limiting publik | VERIFIED | Login/register/ingestion: 429 dan Retry-After; bucket 60 detik sejak request pertama. |
 | NFR08 | Mitigasi API dasar | VERIFIED | Prepared queries, session/CSRF, ownership, CSP lokal, response tanpa detail internal, scoped device key. Bukan sertifikasi pentest. |
 | NFR09 | Ukuran target tombol | VERIFIED | review_routes: kontrol terlihat ≥44px, keyboard/focus drawer/modal; bukan sertifikasi WCAG penuh. |
-| NFR10 | Responsivitas mobile | VERIFIED | Semua route pada 320/390/756/1024/1440px dan landscape; demo 320–1440px. |
+| NFR10 | Responsivitas mobile | VERIFIED | Semua route SPA pada 320/390/756/1024/1440px dan landscape; demo 320–1440px. Halaman `units.html` hanya diperiksa pada 320/390/820/1280px (`product_live`). |
 | NFR11 | Tidak ada reading duplikat | VERIFIED | UNIQUE(device_id,created_at), retry identik idempotent dan konflik payload ditolak. |
 | NFR12 | Retensi minimal 6 bulan | PARTIAL | Reading lama dibaca lintas koneksi, backup SQLite konsisten dan quick_check lulus; durasi penyimpanan nyata belum diamati. |
-| NFR13 | Dokumentasi API | VERIFIED | server/API.md mencakup 37 kombinasi metode/path, roles, payload, error, waktu, simulator dan ekspor. |
+| NFR13 | Dokumentasi API | VERIFIED | server/API.md mencakup 42 kombinasi metode/path (37 awal dan 5 jalur telemetry/hardware-command 15 September), roles, payload, error, waktu, simulator dan ekspor. Tujuh jalur produk di `server/product_routes.php` belum tercatat di API.md, sehingga VERIFIED hanya berlaku untuk 42 jalur tersebut. |
 | NFR14 | Error log dapat ditinjau | VERIFIED | Forced report error menghasilkan referensi pada php-server.log; launcher menulis php.log tanpa credential. |
 | NFR15 | Isolasi simulasi/lapangan | VERIFIED | Pemisahan logis software: provenance eksplisit end-to-end, hitungan lima sumber, raw terpisah pH/NTU, legacy tetap unknown, tes campuran lintas DTO/export/report. Bukan bukti lapangan. |
 
@@ -144,7 +146,7 @@ Status awal sesi adalah UNVERIFIED sampai bukti dikumpulkan. VERIFIED di bawah t
 | Contoh framework 05/06/07 | Mock stats, cookie contoh, API placeholder, source TS tanpa build config | Batasan dependency | P2 | Dibiarkan: arsip praktikum tidak diimpor runtime PHP/SPA; README menandai UNVERIFIED dan tidak aman sebagai auth produksi |
 | Hardware/deployment | ESP32, kalibrasi, motor, TLS, uptime dan retensi durasi nyata tidak tersedia | Batasan dependency | P1 | PARTIAL: perangkat fisik, alat referensi, host TLS dan observasi durasi diperlukan |
 
-Temuan yang gagal pada run awal tidak dihapus: timeout growth, ekspor feeding kosong, syntax audit lama, dan regresi sebelum perbaikan tetap merupakan evidence historis. Hanya hasil setelah perbaikan dipakai untuk rekap lulus.
+Pada sesi 15 September, temuan yang gagal pada run awal tidak dihapus: timeout growth, ekspor feeding kosong, syntax audit lama, dan regresi sebelum perbaikan disimpan sebagai evidence historis. Hanya hasil setelah perbaikan dipakai untuk rekap lulus. Koreksi 21 September 2026: pembersihan Fase 5 menghapus 133 folder run di review-hermes yang tidak dirujuk dokumen mana pun dengan namanya. Run gagal di atas hanya dirujuk secara umum oleh kalimat ini, sehingga ikut terhapus, dan karena tidak ada di branch git mana pun penghapusan itu permanen. Yang masih ada hanyalah run gagal growth di `frontend-fixes-regression-20260914-013824`; folder run gagal lainnya tidak lagi tersedia sebagai bukti.
 
 ## 6. Perubahan yang Dilakukan
 
@@ -183,7 +185,7 @@ python -c "import runpy,unittest; m=runpy.run_path('web/tests/test_static.py'); 
 
 Browser evidence penuh: `../05_Desain-Figma/review-hermes/frontend-fixes-regression-20260915-102113/summary.json`. Tidak ada runtime exceptions, console.error atau security error yang dicatat pada suite tersebut. HTTP error yang sengaja diuji bukan kegagalan tak tertangani. Setelahnya hanya warna CSS dan screenshot export diubah; drawer dan export diulang terarah. Backend feeding export diperbaiki dan seluruh backend diulang menjadi 88 pass.
 
-Ukuran layar: 320×740, 390×844, 756×1024, 1024×768, 1440×1024 serta 844×390/720×512. Pemeriksaan mencakup keyboard/drawer/modal, 44px target, reduced motion, error/offline/empty, viewer dan state register. Kontras putih pada tombol bahaya/badge diperbaiki dari 3,87:1 ke 6,95:1; ini bukan audit WCAG menyeluruh. Screenshot mobile export dan route/demo telah diperiksa.
+Ukuran layar: 320×740, 390×844, 756×1024, 1024×768, 1440×1024 serta 844×390/720×512. Pemeriksaan mencakup keyboard/drawer/modal, 44px target, reduced motion, error/offline/empty, viewer dan state register. Kontras putih pada tombol bahaya/badge diperbaiki dari 3,87:1 ke 6,95:1; ini bukan audit WCAG menyeluruh (audit WCAG 2.2 AA terpisah dijalankan kemudian pada 21 September 2026; cakupan dan batasnya ada di bagian "Belum diukur" pada `web/tests/WCAG_AUDIT_2026-09-21.md`). Screenshot mobile export dan route/demo telah diperiksa.
 
 Jangan menjumlahkan rerun sebagai tes unik. Tidak dijalankan: instalasi PWA pada ponsel nyata, Safari/Firefox, screen reader manual, benchmark FPS/GPU, build framework akademik, hardware/TLS/endurance. Masing-masing memerlukan perangkat/toolchain/lingkungan yang belum tersedia.
 
@@ -200,11 +202,11 @@ Jangan menjumlahkan rerun sebagai tes unik. Tidak dijalankan: instalasi PWA pada
 
 ## 9. Checkpoint
 
-[CHECKPOINT.md](CHECKPOINT.md) mencatat titik stabil, bukti terakhir, state database dan langkah lanjut untuk batasan tersisa. Tidak ada migration/setengah edit yang sengaja ditinggalkan. Tes memakai runtime sementara dan semua proses test selesai; launcher tidak dibiarkan berjalan pada database pengguna.
+[CHECKPOINT.md](CHECKPOINT.md) mencatat titik stabil, bukti terakhir yang tercatat di sana (16 September 2026), state database dan langkah lanjut untuk batasan tersisa. Tidak ada migration/setengah edit yang sengaja ditinggalkan. Tes memakai runtime sementara dan semua proses test selesai; launcher tidak dibiarkan berjalan pada database pengguna.
 
 ## Hardware Integration — snapshot sesi sebelumnya (status hardware tidak berubah)
 
-Ini checkpoint persiapan hardware/API, **bukan pernyataan seluruh permintaan lanjutan selesai**. Status aplikasi lokal pada bagian sebelumnya tetap baseline; bukti terbaru backend adalah **94 tes pass, 30 PHP lint pass**, tanpa failure/error/skip (`../05_Desain-Figma/review-hermes/backend-regression-20260915-154050/results.json`). Enam tes baru mencakup telemetry, replay/ACK/expiry/ownership, gate hardware, serta migrasi rollback/idempotence. Tidak ada tes browser baru pada kelanjutan ini.
+Ini checkpoint persiapan hardware/API, **bukan pernyataan seluruh permintaan lanjutan selesai**. Status aplikasi lokal pada bagian sebelumnya tetap baseline; bukti backend pada snapshot ini adalah **94 tes pass, 30 PHP lint pass**, tanpa failure/error/skip (`../05_Desain-Figma/review-hermes/backend-regression-20260915-154050/results.json`). Enam tes baru mencakup telemetry, replay/ACK/expiry/ownership, gate hardware, serta migrasi rollback/idempotence. Tidak ada tes browser baru pada kelanjutan ini.
 
 Identifikasi berdasarkan uraian foto pengguna, bukan foto yang diperiksa langsung: ESP32 DOIT DevKit V1 ESP-WROOM-32 **30 pin/15 per sisi/Micro-USB**; turbidity Water Clarity Detector kit, kemiripan SEN0189 belum mengonfirmasi model; probe diduga DS18B20, kabel belum terverifikasi. Sensor pH tanah **bukan pH air terkalibrasi**, hasil pengukuran AO pH/turbidity **BELUM DIUKUR**. Relay `1Ch Relay 24V H/L` tidak sesuai adaptor 12V/GPIO langsung. Pengganti perlu 5V optoisolated dengan trigger 3.3V eksplisit dan verifikasi VCC/JD-VCC; SG90 perlu catu 5V regulated >=2A, ground bersama; adaptor 12V perlu buck; DHT11 bukan suhu air. Detail wiring dan power-on tanpa AC ada di `hardware/WIRING.md`.
 
@@ -251,13 +253,13 @@ UI menampilkan badge lima sumber, hitungan, panel raw ADC/mV/null/sesi/status da
 | Backend | 96 pass, 0 fail/error/skip; 30 PHP lint. `backend-regression-20260915-203430/results.json` |
 | Browser penuh | 23 suite pass; 246 assertion JSON + 7 SW stdout. `frontend-fixes-regression-20260915-202608/summary.json` |
 | Diagnostic CSS final | 10 pass, screenshot ditinjau. `software-provenance-final/results.json` |
-| TLS positif/negatif | Lulus. `local-tls-software/tls.json` |
+| TLS positif/negatif | Lulus. `local-tls-software/tls-20260915.json` |
 | Edge HTTPS LAN/PWA | 4 pass. `local-tls-software/browser/results.json` |
 | Trust/inventory | `local-tls-software/trust-and-browsers.json` |
 
-Artefak tes pada `../05_Desain-Figma/review-hermes/`; migrasi pada folder backup yang disebut di atas. Rerun gagal awal tetap disimpan; tidak dijumlahkan sebagai tes unik. Caddy/PHP sengaja berjalan untuk akses lokal, bukan proses test terlantar. Tidak ada Git init/add/commit.
+Artefak tes pada `../05_Desain-Figma/review-hermes/`; migrasi pada folder backup yang disebut di atas. Rerun gagal awal disimpan saat sesi itu dan tidak dijumlahkan sebagai tes unik; folder run gagal bertanggal 15 September terhapus permanen pada pembersihan 21 September 2026 (lihat koreksi di bagian temuan di atas). Caddy/PHP sengaja berjalan untuk akses lokal, bukan proses test terlantar. Tidak ada Git init/add/commit.
 
-## 10. Status Akhir
+## 10. Status Akhir sesi 15 September 2026
 
 Sisi provenance software, UI diagnostik, ekspor, migrasi aktif, dan TLS lokal selesai dengan bukti di atas. URL saat akhir sesi: https://192.168.0.103:8443/#/login . Akun lama dipertahankan. Launcher bukan service/autostart; panduan restart/stop ada di LOCAL_GUIDE.
 

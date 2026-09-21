@@ -1,14 +1,14 @@
 import { RenameDeviceForm } from "@/components/settings/rename-device-form"
 import { RotateKeyButton } from "@/components/settings/rotate-key-button"
-import { panel } from "@/components/ui/styles"
+import { heading, panel } from "@/components/ui/styles"
 import type { Device } from "@/lib/api/schemas"
 import { formatDateTime } from "@/lib/format"
 
 export function DeviceCard({ device, isAdmin }: { device: Device; isAdmin: boolean }) {
   return (
-    <article className={`${panel} space-y-4`}>
+    <article className={`${panel()} space-y-4`}>
       <div className="space-y-1">
-        <h3 className="font-display text-lg font-semibold text-ink">{device.name}</h3>
+        <h3 className={heading({ level: "sub", tone: "ink" })}>{device.name}</h3>
         <p className="text-sm text-muted">{device.location}</p>
         <p className="font-data text-xs text-muted">{device.id}</p>
       </div>

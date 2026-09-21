@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useClaimDevice } from "@/hooks/use-devices"
 import { DeviceClaimInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -46,14 +47,12 @@ export function ClaimDeviceForm() {
         error={errors.serial_number}
       >
         <input
-          id="serial-number"
           name="serial_number"
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
-          className={`${input} font-data`}
-          aria-invalid={Boolean(errors.serial_number)}
-          aria-describedby={describedBy("serial-number", SERIAL_HINT, errors.serial_number)}
+          className={`${control({ font: "data" })}`}
+          {...fieldProps("serial-number", { hint: SERIAL_HINT, error: errors.serial_number })}
         />
       </Field>
 

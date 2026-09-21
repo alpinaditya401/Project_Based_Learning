@@ -1,3 +1,4 @@
+import { statusText } from "@/components/ui/styles"
 import type { Alert } from "@/lib/api/schemas"
 import { formatDateTime } from "@/lib/format"
 import { AcknowledgeButton } from "./acknowledge-button"
@@ -9,12 +10,13 @@ const SEVERITY_LABEL: Record<Alert["severity"], string> = {
 }
 
 // Colour only repeats what the label already says, so a reader who cannot separate
-// these hues still gets the severity from the word.
-const SEVERITY_TONE: Record<Alert["severity"], string> = {
-  info: "text-ink",
-  warning: "text-sediment-text",
-  critical: "text-alarm-coral-text",
-}
+// these hues still gets the severity from the word. The hues themselves come from the
+// shared statusText variant, so a severity and a command status never drift apart.
+const SEVERITY_TONE = {
+  info: "neutral",
+  warning: "warning",
+  critical: "danger",
+} as const satisfies Record<Alert["severity"], "neutral" | "warning" | "danger">
 
 function handledText(alert: Alert): string {
   if (!alert.acknowledged) return "Belum ditangani"
@@ -42,7 +44,7 @@ export function AlertList({
         return (
           <li key={alert.id} className="space-y-2 px-4 py-4 sm:px-6">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <span className={`font-semibold ${SEVERITY_TONE[alert.severity]}`}>
+              <span className={statusText({ tone: SEVERITY_TONE[alert.severity] })}>
                 {SEVERITY_LABEL[alert.severity]}
               </span>
               {/* Device ids are a single token of up to 128 characters, which only

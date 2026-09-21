@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import sys
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[1]
 errors = []
@@ -23,7 +24,7 @@ for path in required:
     check(path.exists(), f"Missing file: {path}")
 
 html = (ROOT / "index.html").read_text(encoding="utf-8")
-js = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+js = app_js_text(ROOT / "assets/js")
 css = (ROOT / "assets/css/app.css").read_text(encoding="utf-8")
 manifest = json.loads((ROOT / "manifest.webmanifest").read_text(encoding="utf-8"))
 

@@ -3,8 +3,9 @@
 import { LogIn } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useLogin } from "@/hooks/use-session"
 import { LoginInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -39,25 +40,21 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
     <form onSubmit={onSubmit} noValidate className="space-y-5">
       <Field id="username" label="Email, nomor WA, atau username" error={errors.username}>
         <input
-          id="username"
           name="username"
           autoComplete="username"
-          className={input}
-          aria-invalid={Boolean(errors.username)}
-          aria-describedby={describedBy("username", undefined, errors.username)}
+          className={control()}
+          {...fieldProps("username", { error: errors.username })}
         />
       </Field>
 
       <Field id="password" label="Password" error={errors.password}>
         <div className="flex gap-2">
           <input
-            id="password"
             name="password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
-            className={input}
-            aria-invalid={Boolean(errors.password)}
-            aria-describedby={describedBy("password", undefined, errors.password)}
+            className={control()}
+            {...fieldProps("password", { error: errors.password })}
           />
           <button
             type="button"

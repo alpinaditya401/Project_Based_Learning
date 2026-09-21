@@ -1,5 +1,7 @@
 # Checkpoint AquaSmart — software lokal, 15 September 2026
 
+Catatan titik stabil dan langkah lanjut sampai 16 September 2026, bukan status terkini. Status yang berlaku, termasuk gerbang test 21 September 2026, ada di [REVIEW_REPORT.md](REVIEW_REPORT.md).
+
 ## Lanjutan provisioning/onboarding/push: checkpoint fondasi 16 September 2026
 
 **Permintaan A–D belum selesai.** Titik aman saat berhenti: mockup dan policy kalkulasi selesai; endpoint, schema provisioning, UI aktif dan Web Push belum disambungkan. Tidak ada migrasi aktif/setengah transaksi, perubahan data existing, atau perubahan firmware. Evidence lama tetap historis; tidak ada klaim semua software produk selesai.
@@ -30,9 +32,9 @@ Baca **[TARGET_AKHIR_AQUASMART.md](TARGET_AKHIR_AQUASMART.md)** sebelum melanjut
 
 ## Penutupan implementasi software lokal: 16 September 2026
 
-Panduan operasional terkini: **SOFTWARE_HANDOVER.md**. Implementasi yang tersedia lulus ulang 96 tes backend (0 failure/error/skip), 30 lint PHP, dan 24 suite browser (368 assertion JSON serta 7 assertion SW stdout). Evidence terbaru: `backend-regression-20260916-102137/results.json` dan `frontend-fixes-regression-20260916-102137/summary.json` dalam `../05_Desain-Figma/review-hermes/`.
+Panduan operasional terkini: **SOFTWARE_HANDOVER.md**. Implementasi yang tersedia lulus ulang 96 tes backend (0 failure/error/skip), 30 lint PHP, dan 24 suite browser (368 assertion JSON serta 7 assertion SW stdout). Evidence 16 September 2026 (hasil gerbang 21 September 2026 ada di `test-output/`): `backend-regression-20260916-102137/results.json` dan `frontend-fixes-regression-20260916-102137/summary.json` dalam `../05_Desain-Figma/review-hermes/`.
 
-PWA kini menyertakan ikon PNG 192/512 dari SVG existing dengan padding aman, ikon Apple 180, id/scope eksplisit, dan precache v5. Tes memverifikasi ukuran/decode/cache ikon serta installability. Tes demo 11 viewport sudah masuk runner utama. Ikon dapat dibangun ulang dengan `node web/tests/build_app_icons.mjs`.
+PWA kini menyertakan ikon PNG 192/512 dari SVG existing dengan padding aman, ikon Apple 180, id/scope eksplisit, dan precache v5 (per 21 September 2026 `web/sw.js` memakai cache `aquasmart-v18`). Tes memverifikasi ukuran/decode/cache ikon serta installability. Tes demo 11 viewport sudah masuk runner utama. Ikon dapat dibangun ulang dengan `node web/tests/build_app_icons.mjs`.
 
 HTTPS aktif kembali melalui launcher, IP 192.168.8.170, TLS1.3; uji CA/hostname benar dan salah lulus. Browser Windows mempercayai HTTPS IP terkini dan PWA installability lulus 4 pemeriksaan (`software-final-https-20260916/results.json`). Tidak ada migrasi ulang, seed ulang, atau perubahan firmware/hardware.
 
@@ -46,7 +48,7 @@ Koreksi lanjutan sesuai laporan pengguna saat scroll: kedua tombol kini berada d
 
 Perbaikan demo sistem: navigasi sebelumnya/berikutnya dipisahkan dari area gulir; hanya panel isi yang menggulir, dan perpindahan frame mengembalikan panel ke atas. `review_demo.mjs` lulus 17 pemeriksaan termasuk posisi kedua tombol saat scroll/pergantian frame pada lebar 320/390/756/1280. Evidence: `../05_Desain-Figma/review-hermes/demo-navigation-fixed-20260916/results.json`. CSS/JS/test dibackup manual sebelum perubahan. Uji Android fisik tetap terpisah dari emulasi ini.
 
-IP Wi-Fi berubah menjadi 192.168.8.170. Launcher Caddy/PHP telah dijalankan ulang dengan `python -X utf8 server/run_tls_local.py --host 192.168.8.170`. URL terkini: https://192.168.8.170:8443/#/home . Uji TLS pada IP baru lulus (CA/hostname benar HTTP200, CA/hostname salah ditolak); `local-tls-software/tls.json` berisi hasil baru, hasil IP lama disimpan sebagai `tls-20260915.json`.
+IP Wi-Fi berubah menjadi 192.168.8.170. Launcher Caddy/PHP telah dijalankan ulang dengan `python -X utf8 server/run_tls_local.py --host 192.168.8.170`. URL pada 16 September 2026: https://192.168.8.170:8443/#/home . Uji TLS pada IP baru lulus (CA/hostname benar HTTP200, CA/hostname salah ditolak); `local-tls-software/tls.json` berisi hasil baru, hasil IP lama disimpan sebagai `tls-20260915.json`.
 
 Pengguna mengonfirmasi Android tersedia. Pemeriksaan akses melalui Chrome Android sedang menunggu hasil pengguna; instalasi dan standalone belum diuji. Salinan CA publik: `server/tls/public/AquaSmart-local-root.crt`. Trust Windows tidak otomatis berlaku di Android. Percobaan curl Windows pada IP baru menemui `CRYPT_E_NO_REVOCATION_CHECK`; jangan mencatatnya sebagai lulus. Tes Python memverifikasi CA dan hostname, sedangkan evidence Edge sebelumnya berlaku pada IP lama.
 
@@ -61,12 +63,12 @@ Bagian operasional 15 September di bawah adalah snapshot sebelumnya. Gunakan IP 
 - Migrasi database AKTIF berhasil tanpa seed ulang: backup timestamp, 12 tabel lama mempertahankan seluruh nilai dan jumlah row, quick_check OK. 36 reading dan 3 alert lama tetap legacy_unverified. Tidak perlu restore.
 - Caddy 2.11.4 resmi terverifikasi SHA-512, HTTPS LAN TLS 1.3 berjalan. CA salah ditolak; hostname salah ditolak melalui TLS/SNI. Root CA dipasang CurrentUser\Root Windows dan Edge benar-benar memuat HTTPS tanpa ignore-certificate flags. In-app browser juga membuka home/login tanpa interstitial.
 
-## Evidence terbaru
+## Evidence sesi 15 September 2026
 
 - Backend: 96 tes pass, 0 fail/error/skip; 30 PHP lint pass. `../05_Desain-Figma/review-hermes/backend-regression-20260915-203430/results.json`.
 - Browser: 23 suite pass, 246 assertion JSON + 7 assertion SW standalone stdout; `../05_Desain-Figma/review-hermes/frontend-fixes-regression-20260915-202608/summary.json`.
 - Setelah perbaikan wrapping tabel diagnostik: 10 pemeriksaan pass, screenshot ditinjau; `../05_Desain-Figma/review-hermes/software-provenance-final/results.json`.
-- TLS positif/negatif: `../05_Desain-Figma/review-hermes/local-tls-software/tls.json`.
+- TLS positif/negatif: `../05_Desain-Figma/review-hermes/local-tls-software/tls-20260915.json` (IP 192.168.0.103; `tls.json` sejak 16 September berisi uji IP 192.168.8.170).
 - Edge HTTPS LAN/PWA: 4 pemeriksaan pass; `../05_Desain-Figma/review-hermes/local-tls-software/browser/results.json`. Ini bukan pengujian instalasi HP.
 - Trust/browser inventory: `../05_Desain-Figma/review-hermes/local-tls-software/trust-and-browsers.json`.
 - Migrasi aktif: `_backup-sebelum-revisi/20260915-202837-active-migration/result.json` dan `before.sqlite`. Sebelum migrasi tidak ada proses PHP; runner menolak migrasi jika PHP masih aktif. Migrasi menggunakan Database::connection(false), tanpa bootstrap. Semua tes backend tetap memakai DB sementara.
@@ -87,7 +89,9 @@ Rule firewall LAN dicoba secara terbatas pada Wi-Fi 2, IP 192.168.0.103, TCP8443
 - Hak administrator diperlukan untuk rule firewall terarah bila HP tidak dapat mengakses. Perintah tepat di LOCAL_GUIDE; setelah itu pasang public root CA di HP yang dipakai uji, lalu catat hasil nyata instalasi/platform.
 - TLS menggunakan local CA, bukan TLS publik. Trust HP tidak otomatis mengikuti trust Windows.
 
-## Requirement saat ini
+## Requirement per 16 September 2026
+
+Penilaian ulang 21 September 2026 terhadap kontrak dan SKPL ada di `docs/CEKLIST_KESESUAIAN_KONTRAK_SKPL.md`.
 
 NFR15: VERIFIED untuk pemisahan logis/provenance software lokal (baris campuran tetap eksplisit; bukan bukti data lapangan/kalibrasi). NFR05: PARTIAL, naik dari UNVERIFIED berdasarkan TLS lokal teruji. FR23: tetap PARTIAL, Edge installability lulus tetapi instalasi HP/Safari/Firefox belum diuji.
 

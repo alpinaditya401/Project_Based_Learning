@@ -2,7 +2,7 @@ import Link from "next/link"
 import { AlertList } from "@/components/alerts/alert-list"
 import { parseAlertStatus, StatusFilter } from "@/components/alerts/status-filter"
 import { AutoRefresh } from "@/components/auto-refresh"
-import { panel } from "@/components/ui/styles"
+import { heading, inlineLink, panel } from "@/components/ui/styles"
 import { AlertsResponse, DevicesResponse } from "@/lib/api/schemas"
 import { requireSession, serverRequest } from "@/lib/api/server"
 
@@ -35,14 +35,14 @@ export default async function AlertsPage({
       <AutoRefresh seconds={30} />
 
       <header className="space-y-3">
-        <h1 className="font-display text-3xl font-bold text-deep-current">Peringatan</h1>
+        <h1 className={heading()}>Peringatan</h1>
         <p className="text-sm text-ink">
           Peringatan ruang budidaya, terbaru di atas. Halaman memuat sampai {ALERT_LIMIT} peringatan
           terakhir dan diperbarui otomatis setiap 30 detik.
         </p>
       </header>
 
-      <section aria-labelledby="ringkasan" className={panel}>
+      <section aria-labelledby="ringkasan" className={panel()}>
         <h2 id="ringkasan" className="sr-only">
           Ringkasan peringatan
         </h2>
@@ -78,32 +78,29 @@ export default async function AlertsPage({
       </section>
 
       {isAdmin ? null : (
-        <p className={`${panel} text-sm text-ink`}>
+        <p className={`${panel()} text-sm text-ink`}>
           Akun viewer hanya bisa membaca peringatan. Penandaan sudah ditangani hanya bisa dilakukan
           admin ruang budidaya.
         </p>
       )}
 
       <section aria-labelledby="daftar-peringatan" className="space-y-4">
-        <h2 id="daftar-peringatan" className="font-display text-xl font-semibold text-ink">
+        <h2 id="daftar-peringatan" className={heading({ level: "panel", tone: "ink" })}>
           Daftar peringatan
         </h2>
         <StatusFilter active={status} />
         {alerts.length === 0 ? (
-          <p className={`${panel} text-sm text-ink`}>
+          <p className={`${panel()} text-sm text-ink`}>
             Daftar terisi saat perangkat mengirim pembacaan yang melewati ambang di Pengaturan.
             Kalau Anda menunggu peringatan yang tidak pernah muncul, periksa ambangnya di sana.
           </p>
         ) : visible.length === 0 ? (
-          <div className={`${panel} space-y-2 text-sm text-ink`}>
+          <div className={`${panel()} space-y-2 text-sm text-ink`}>
             <p>
               Tidak ada peringatan yang belum ditangani di antara {alerts.length} peringatan
               terakhir. Saringan sedang menyembunyikan yang sudah ditandai.
             </p>
-            <Link
-              href="/dashboard/alerts?status=semua"
-              className="inline-flex min-h-11 items-center font-medium text-deep-current underline underline-offset-4"
-            >
+            <Link href="/dashboard/alerts?status=semua" className={inlineLink}>
               Lihat semua peringatan
             </Link>
           </div>
@@ -113,7 +110,7 @@ export default async function AlertsPage({
       </section>
 
       <section aria-labelledby="cara-peringatan" className="border-t border-foam-line pt-5">
-        <h2 id="cara-peringatan" className="font-display text-lg font-semibold text-ink">
+        <h2 id="cara-peringatan" className={heading({ level: "sub", tone: "ink" })}>
           Cara peringatan ini dihitung
         </h2>
         <p className="mt-2 max-w-prose text-sm text-ink">

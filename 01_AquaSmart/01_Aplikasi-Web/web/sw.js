@@ -1,9 +1,22 @@
-const CACHE = 'aquasmart-v5';
+const CACHE = 'aquasmart-v18';
 const ASSETS = [
   './',
   './index.html',
   './assets/css/app.css',
   './assets/js/app.js',
+  './assets/js/icons.js',
+  './assets/js/dom.js',
+  './assets/js/format.js',
+  './assets/js/ui-overlay.js',
+  './assets/js/state-store.js',
+  './assets/js/server-mappers.js',
+  './assets/js/views-public.js',
+  './assets/js/provenance.js',
+  './assets/js/views-dashboard.js',
+  './assets/js/shell-nav.js',
+  './assets/js/api-client.js',
+  './assets/js/views-routes.js',
+  './assets/js/session.js',
   './assets/js/experience.js',
   './assets/images/logo.svg',
   './assets/images/icon-192.png',

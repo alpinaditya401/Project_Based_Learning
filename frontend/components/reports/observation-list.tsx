@@ -12,7 +12,7 @@ export function ObservationList({
 }) {
   if (observations.length === 0) {
     return (
-      <p className={`${panel} text-sm text-muted`}>
+      <p className={`${panel()} text-sm text-muted`}>
         Belum ada observasi untuk perangkat ini.{" "}
         {isAdmin
           ? "Catat sampel pertama lewat formulir di bawah."

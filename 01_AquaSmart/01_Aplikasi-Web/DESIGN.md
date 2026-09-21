@@ -4,7 +4,7 @@ Pembacaan desain: instrumen pemantauan air untuk pembudidaya, tenang dan mudah d
 
 ## Design system
 
-Token berasal dari `web/assets/css/app.css`: ink `#10262A`, deep-current `#0E2A30`, clear-water `#4C9A8E`, foam `#F1F5F3`. Sediment `#B9834F` dan alarm `#D2601F` menandai kondisi air; warna teks status memakai varian lebih gelap. Spacing 4/8/12/16/24/32/48/64/96 px; radius kontrol 4 px dan panel 10 px. Lebar konten maksimum 1180 px.
+Token berasal dari `web/assets/css/app.css`: ink `#10262A`, deep-current `#0E2A30`, clear-water `#4C9A8E`, foam `#F1F5F3`. Sediment `#B9834F` dan alarm `#D2601F` menandai kondisi air; warna teks status memakai varian lebih gelap. Spacing 4/8/12/16/24/32/48/64/96 px; radius kontrol 4 px dan panel 10 px. Lebar konten maksimum 1180 px. Warna komponen (border field, placeholder, track switch, latar toast, panggung demo) berdiri sebagai custom property tersendiri, bukan literal di aturan; `05_Desain-Figma/tokens.json` mengekspor seluruh token warna `:root`.
 
 ## Design style
 
@@ -20,7 +20,7 @@ GSAP hanya dimuat saat demo dibuka. Tujuan transisi: menandai perpindahan frame.
 
 ## Evidence dan batas
 
-`review_completion.mjs` memeriksa parameter, fallback, tanpa request eksternal pada login, dan overflow 320/375/768/1024/1440 px. `review_demo.mjs` memeriksa focus trap, Escape, dan perubahan reduced motion saat modal terbuka. `review_routes.mjs` memeriksa semua delapan route pada tujuh ukuran/rasio layar dan target 44px. Tombol bahaya/badge memakai alarm-coral-text sehingga kontras putih meningkat dari 3,87:1 menjadi 6,95:1. Three berhenti ketika stage keluar viewport. Screenshot route, demo dan export mobile ditinjau; detail evidence ada di REVIEW_REPORT.md. Audit WCAG menyeluruh, profil FPS dan mobile fisik belum dilakukan.
+`review_completion.mjs` memeriksa parameter, fallback, tanpa request eksternal pada login, dan overflow 320/375/768/1024/1440 px. `review_demo.mjs` memeriksa focus trap, Escape, dan perubahan reduced motion saat modal terbuka. `review_routes.mjs` memeriksa semua delapan route pada tujuh ukuran/rasio layar dan target 44px. Tombol bahaya/badge memakai alarm-coral-text sehingga kontras putih meningkat dari 3,87:1 menjadi 6,95:1. Three berhenti ketika stage keluar viewport. Screenshot route, demo dan export mobile ditinjau; detail evidence ada di REVIEW_REPORT.md. Audit WCAG 2.2 AA sudah dijalankan 2026-09-21 dengan pengukuran pada render nyata; hasil, angka kontras, dan batasnya ada di `web/tests/WCAG_AUDIT_2026-09-21.md`. Uji screen reader, reflow 400%, jarak teks, profil FPS dan mobile fisik tetap belum dilakukan.
 
 ## Provenance / diagnostik — kelanjutan software
 

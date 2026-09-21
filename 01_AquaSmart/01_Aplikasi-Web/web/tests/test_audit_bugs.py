@@ -1,10 +1,11 @@
 import sys
 import unittest
 from pathlib import Path
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[1]
 SW = (ROOT / "sw.js").read_text(encoding="utf-8")
-APP = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+APP = app_js_text(ROOT / "assets/js")
 EXPERIENCE = (ROOT / "assets/js/experience.js").read_text(encoding="utf-8")
 CSS = (ROOT / "assets/css/app.css").read_text(encoding="utf-8")
 

@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { describedBy, Field } from "@/components/ui/field"
-import { button, input } from "@/components/ui/styles"
+import { fieldProps } from "@/components/ui/a11y"
+import { Field } from "@/components/ui/field"
+import { button, control } from "@/components/ui/styles"
 import { useUpdateProfile } from "@/hooks/use-session"
 import { ProfileInput } from "@/lib/api/schemas"
 import { fieldErrors } from "@/lib/form"
@@ -43,26 +44,22 @@ export function ProfileForm({ name, phone }: { name: string; phone: string }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Field id="profile-name" label="Nama lengkap" error={errors.name}>
           <input
-            id="profile-name"
             name="name"
             defaultValue={name}
             autoComplete="name"
-            className={input}
-            aria-invalid={Boolean(errors.name)}
-            aria-describedby={describedBy("profile-name", undefined, errors.name)}
+            className={control()}
+            {...fieldProps("profile-name", { error: errors.name })}
           />
         </Field>
         <Field id="profile-phone" label="Nomor telepon" hint={PHONE_HINT} error={errors.phone}>
           <input
-            id="profile-phone"
             name="phone"
             type="tel"
             inputMode="tel"
             defaultValue={phone}
             autoComplete="tel"
-            className={input}
-            aria-invalid={Boolean(errors.phone)}
-            aria-describedby={describedBy("profile-phone", PHONE_HINT, errors.phone)}
+            className={control()}
+            {...fieldProps("profile-phone", { hint: PHONE_HINT, error: errors.phone })}
           />
         </Field>
       </div>

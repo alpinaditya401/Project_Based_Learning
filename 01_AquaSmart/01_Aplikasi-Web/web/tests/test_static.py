@@ -1,4 +1,5 @@
 from pathlib import Path
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,7 +19,7 @@ def test_required_files_exist():
 
 def test_brand_and_accessibility_hooks():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
-    js = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+    js = app_js_text(ROOT / "assets/js")
     css = (ROOT / "assets/css/app.css").read_text(encoding="utf-8")
     assert "AquaSmart AIoT" in html
     assert 'aria-live="polite"' in html
@@ -28,7 +29,7 @@ def test_brand_and_accessibility_hooks():
 
 
 def test_core_feature_labels_present():
-    js = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+    js = app_js_text(ROOT / "assets/js")
     for text in [
         "Kualitas Air",
         "Kekeruhan",

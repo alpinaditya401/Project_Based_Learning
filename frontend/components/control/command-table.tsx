@@ -1,3 +1,4 @@
+import { statusText } from "@/components/ui/styles"
 import { TableRegion, td, th } from "@/components/ui/table-region"
 import type { Command } from "@/lib/api/schemas"
 import { formatEpoch, provenanceLabel } from "@/lib/format"
@@ -16,13 +17,13 @@ export const STATUS_LABEL: Record<Command["status"], string> = {
   timeout: "Tanpa balasan",
 }
 
-const STATUS_TONE: Record<Command["status"], string> = {
-  pending: "text-ink",
-  delivered: "text-ink",
-  succeeded: "text-clear-water-text",
-  failed: "text-alarm-coral-text",
-  timeout: "text-sediment-text",
-}
+const STATUS_TONE = {
+  pending: "neutral",
+  delivered: "neutral",
+  succeeded: "ok",
+  failed: "danger",
+  timeout: "warning",
+} as const satisfies Record<Command["status"], "neutral" | "ok" | "danger" | "warning">
 
 export function commandAction(command: Command): string {
   if (command.actuator === "feeder") return `Pakan ${command.duration} detik`
@@ -59,7 +60,7 @@ export function CommandTable({ commands }: { commands: Command[] }) {
               <td className={`${td} text-muted`}>{formatEpoch(command.created_at)}</td>
               <td className={td}>{ACTUATOR_LABEL[command.actuator]}</td>
               <td className={td}>{commandAction(command)}</td>
-              <td className={`${td} font-semibold ${STATUS_TONE[command.status]}`}>
+              <td className={`${td} ${statusText({ tone: STATUS_TONE[command.status] })}`}>
                 {STATUS_LABEL[command.status]}
               </td>
               <td className={`${td} text-xs text-muted`}>{provenanceLabel(command.provenance)}</td>

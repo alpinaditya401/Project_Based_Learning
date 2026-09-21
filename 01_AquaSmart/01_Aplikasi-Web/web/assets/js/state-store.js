@@ -55,3 +55,12 @@ export let state = loadState();
 export function setState(next) {
   state = next;
 }
+
+// Transport mode: 'checking' until the session probe resolves, then 'api' or
+// 'demo'. Read in 50 places, so importers must use the live binding rather than
+// snapshotting it at module scope.
+export let apiMode = 'checking';
+
+export function setApiMode(next) {
+  apiMode = next;
+}

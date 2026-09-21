@@ -2,7 +2,7 @@ import { icon } from './icons.js';
 import { app, escapeHtml, modalRoot, navigate, qs, qsa, route } from './dom.js';
 import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 import { showModal, toast } from './ui-overlay.js';
-import { APP_KEY, loadState, SESSION_KEY, setState, state } from './state-store.js';
+import { APP_KEY, apiMode, loadState, SESSION_KEY, setApiMode, setState, state } from './state-store.js';
 import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 (() => {
@@ -16,7 +16,6 @@ import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } 
   let commonCleanup = null;
   let authenticated = false;
   let csrfToken = '';
-  let apiMode = 'checking';
 
   function saveState() {
     if (apiMode !== 'demo') { localStorage.removeItem(APP_KEY); return; }
@@ -114,7 +113,7 @@ import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } 
   }
 
   function useDemoMode() {
-    apiMode = 'demo';
+    setApiMode('demo');
     csrfToken = '';
     authenticated = false;
     sessionStorage.removeItem(SESSION_KEY);
@@ -124,21 +123,21 @@ import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } 
   async function restoreSession() {
     try {
       const payload = await apiRequest('/api/auth/me');
-      apiMode = 'api';
+      setApiMode('api');
       authenticated = true;
       csrfToken = payload.csrf_token || '';
       sessionStorage.setItem(SESSION_KEY, 'true');
       applyServerUser(payload.user);
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
-        apiMode = 'api';
+        setApiMode('api');
         authenticated = false;
         csrfToken = '';
         sessionStorage.removeItem(SESSION_KEY);
       } else if (error instanceof ApiUnavailableError) {
         useDemoMode();
       } else {
-        apiMode = 'api';
+        setApiMode('api');
         authenticated = false;
         csrfToken = '';
         sessionStorage.removeItem(SESSION_KEY);
@@ -873,7 +872,7 @@ import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } 
       } catch (error) {
         globalError.textContent = error.message || 'Akun belum dapat dibuat. Periksa data lalu coba lagi.';
         globalError.classList.add('show');
-        if (error instanceof ApiUnavailableError) apiMode = 'demo';
+        if (error instanceof ApiUnavailableError) setApiMode('demo');
       } finally {
         submit.disabled = false;
       }

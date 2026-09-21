@@ -1,4 +1,4 @@
-import { apiMode } from './state-store.js';
+import { apiMode, currentDevice, state } from './state-store.js';
 
 // Provenance labels for telemetry rows.
 // sourceNames must stay a single object owned here: Object.keys order drives
@@ -17,4 +17,11 @@ export function sourceCountsView(counts) {
 }
 export function diagnosticPanel() {
   return apiMode !== 'api' ? '' : `<section class="settings-card neu-card col-12"><h2>Diagnostik telemetry mentah</h2><p>PLACEHOLDER SENSOR TANAH, BUKAN pH AIR TERKALIBRASI. Mapping turbidity bukan NTU.</p><div id="raw-telemetry" role="status">Memuat telemetry...</div></section>`;
+}
+
+export function dataModeCopy() {
+  if (apiMode !== 'api') return 'Data simulasi tersimpan di browser';
+  if (!Number.isFinite(currentDevice()?.ph)) return 'Belum ada pembacaan sensor';
+  const sources=[...new Set(state.readings.map(row=>rowSource(row)))];
+  return `Sumber data: ${sources.map(key=>sourceNames[key]).join(', ') || sourceNames[rowSource(currentDevice())]}. Bukan validasi hardware atau kalibrasi`;
 }

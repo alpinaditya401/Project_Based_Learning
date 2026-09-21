@@ -2,11 +2,11 @@ import { icon } from './icons.js';
 import { app, escapeHtml, modalRoot, navigate, qs, qsa, route } from './dom.js';
 import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 import { showModal, toast } from './ui-overlay.js';
-import { APP_KEY, apiMode, loadState, SESSION_KEY, setApiMode, setState, state } from './state-store.js';
+import { APP_KEY, apiMode, connectionLabel, currentDevice, loadState, SESSION_KEY, setApiMode, setState, state } from './state-store.js';
 import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 import { landingPage, loginPage, registerPage } from './views-public.js';
-import { diagnosticPanel, provenanceBadge, rowSource, sourceCountsView, sourceNames } from './provenance.js';
+import { dataModeCopy, diagnosticPanel, provenanceBadge, rowSource, sourceCountsView, sourceNames } from './provenance.js';
 (() => {
   'use strict';
 
@@ -181,14 +181,6 @@ import { diagnosticPanel, provenanceBadge, rowSource, sourceCountsView, sourceNa
  }
 
   function isAuthed() { return authenticated; }
-  function connectionLabel() { return apiMode === 'api' ? 'API lokal' : 'Mode demo'; }
-  function dataModeCopy() {
-    if (apiMode !== 'api') return 'Data simulasi tersimpan di browser';
-    if (!Number.isFinite(currentDevice()?.ph)) return 'Belum ada pembacaan sensor';
-    const sources=[...new Set(state.readings.map(row=>rowSource(row)))];
-    return `Sumber data: ${sources.map(key=>sourceNames[key]).join(', ') || sourceNames[rowSource(currentDevice())]}. Bukan validasi hardware atau kalibrasi`;
-  }
-  function currentDevice() { return state.devices[state.activeDevice] || state.devices[0]; }
 
   const pageMeta = {
     dashboard: ['DASHBOARD KUALITAS AIR', 'Pemantauan real-time'],

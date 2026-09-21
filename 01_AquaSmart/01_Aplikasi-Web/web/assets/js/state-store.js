@@ -64,3 +64,7 @@ export let apiMode = 'checking';
 export function setApiMode(next) {
   apiMode = next;
 }
+
+// Read-only views over the state this module owns.
+export function connectionLabel() { return apiMode === 'api' ? 'API lokal' : 'Mode demo'; }
+export function currentDevice() { return state.devices[state.activeDevice] || state.devices[0]; }

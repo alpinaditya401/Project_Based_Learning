@@ -1,5 +1,6 @@
 import { icon } from './icons.js';
 import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
+import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 
 (() => {
   'use strict';
@@ -589,7 +590,6 @@ import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
       </div>`;
   }
 
-  function initials(name) { return name.split(/\s+/).map(x => x[0]).slice(0, 2).join('').toUpperCase(); }
 
   function readingStatus(kind, value) {
     if (!Number.isFinite(value)) return ['Belum ada data', 'muted'];
@@ -599,7 +599,6 @@ import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
     return value <= t.turbidityMax ? ['Dalam batas', 'text-success'] : ['Tinggi', 'text-danger'];
   }
 
-  function sensorNumber(value, decimals) { return Number.isFinite(value) ? value.toFixed(decimals) : '—'; }
   function qualityIssues(d) {
     if (!d) return [];
     return [['ph', 'pH', d.ph], ['temp', 'Suhu', d.temp], ['turbidity', 'Kekeruhan', d.turbidity]]
@@ -750,8 +749,6 @@ import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
       ${calendarReportPanel()}${filteredExportPanel()}${diagnosticPanel()}
       <section class="settings-card neu-card col-12"><h2>Log Aktuator & Audit Sistem</h2><p>Log perubahan state server; bukan bukti eksekusi atau ACK hardware.</p><div class="table-wrap" tabindex="0" role="region" aria-label="Audit sistem"><table><thead><tr><th>Waktu</th><th>Aksi</th><th>Detail</th></tr></thead><tbody>${auditLogs.length ? auditLogs.map(log=>`<tr><td>${escapeHtml(log.time)}</td><td>${provenanceBadge(rowSource(log))} ${escapeHtml(log.action)}</td><td>${escapeHtml(JSON.stringify(log.metadata))}</td></tr>`).join('') : '<tr><td class="audit-empty-row" colspan="3">Belum ada audit log.</td></tr>'}</tbody></table></div></section>${operationsPanels()}</section>`);
   }
-  function average(rows, key) { return rows.reduce((sum, row) => sum + Number(row[key]), 0) / Math.max(rows.length, 1); }
-  function formatTime(iso) { return new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' }).format(new Date(iso)); }
 
   function workspacePanel() {
     if (apiMode !== 'api') return '';
@@ -1273,8 +1270,6 @@ import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
     drawChart();
   }
 
-  function clamp(value, min, max) { return Math.min(max, Math.max(min, value)); }
-  function random(min, max) { return Math.random() * (max - min) + min; }
 
   function drawChart() {
     const canvas = qs('#history-chart'); if (!canvas) return;

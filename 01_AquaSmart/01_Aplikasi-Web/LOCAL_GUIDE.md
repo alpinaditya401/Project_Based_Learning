@@ -1,10 +1,10 @@
 # AquaSmart LOCAL PROTOTYPE
 
-Panduan ringkas terbaru: **[SOFTWARE_HANDOVER.md](SOFTWARE_HANDOVER.md)**. Verifikasi 16 September: 96 tes backend, 30 lint PHP dan 24 suite browser lulus. Ikon PWA PNG/Apple dan cache v5 tersedia; browser Windows kembali memverifikasi HTTPS IP 192.168.8.170 tanpa bypass sertifikat. Instalasi HP nyata masih menunggu hasil pengguna.
+Panduan ringkas terbaru: **[SOFTWARE_HANDOVER.md](SOFTWARE_HANDOVER.md)**. Verifikasi 16 September: 96 tes backend, 30 lint PHP dan 24 suite browser lulus. Ikon PWA PNG/Apple tersedia dan cache pada 16 September adalah v5 (sudah dinaikkan sejak itu, nama aktif ada di `web/sw.js`); browser Windows kembali memverifikasi HTTPS IP 192.168.8.170 tanpa bypass sertifikat. Instalasi HP nyata masih menunggu hasil pengguna.
 
 ## Pembaruan akses Android: 16 September 2026
 
-URL terkini adalah https://192.168.8.170:8443/#/home karena IP Wi-Fi komputer berubah. Caddy/PHP telah dijalankan ulang dengan `python -X utf8 server/run_tls_local.py --host 192.168.8.170`; verifikasi CA/SAN dan negative test pada IP baru lulus. Evidence `local-tls-software/tls.json` adalah hasil terbaru; `tls-20260915.json` menyimpan hasil lama. Evidence browser di bawah masih pengujian IP lama.
+URL pada 16 September 2026 adalah https://192.168.8.170:8443/#/home karena IP Wi-Fi komputer berubah. Caddy/PHP telah dijalankan ulang dengan `python -X utf8 server/run_tls_local.py --host 192.168.8.170`; verifikasi CA/SAN dan negative test pada IP baru lulus. Evidence `../05_Desain-Figma/review-hermes/local-tls-software/tls.json` adalah hasil terbaru; `tls-20260915.json` menyimpan hasil lama. Evidence browser di bawah masih pengujian IP lama.
 
 Pengguna memiliki Android; hasil akses Chrome, trust CA, prompt instalasi dan standalone masih menunggu pengujian pengguna. Public CA untuk ditransfer ke Android tersedia di `server/tls/public/AquaSmart-local-root.crt`; tidak berisi private key. Jangan menganggap trust Windows juga sudah terpasang di Android.
 
@@ -18,11 +18,11 @@ Rule sebelumnya gagal karena Access is denied; belum ada bukti rule terpasang. J
 
 Instruksi IP 192.168.0.103 di bagian 15 September berikut adalah riwayat; gunakan alamat baru untuk akses saat ini. FR23 dan NFR05 tetap PARTIAL, status hardware tidak berubah.
 
-## Hasil software terbaru — 15 September 2026 malam
+## Hasil software: 15 September 2026 malam
 
 Bagian ini menggantikan status persiapan pada panduan historis di bawah. Database aktif telah dimigrasikan tanpa seed ulang; backup dan pelestarian semua nilai 12 tabel tercatat pada `_backup-sebelum-revisi/20260915-202837-active-migration/result.json`. Jangan menjalankan seed_local terhadap database lama.
 
-HTTPS sekarang berhasil di [AquaSmart lokal](https://192.168.0.103:8443/#/login). Untuk menjalankan ulang dari root aplikasi:
+HTTPS berhasil pada 15 September di [AquaSmart lokal](https://192.168.0.103:8443/#/login). Untuk menjalankan ulang dari root aplikasi:
 
 ```powershell
 python -X utf8 server/run_tls_local.py --host 192.168.0.103
@@ -138,7 +138,7 @@ Referensi: [persyaratan instalasi PWA](https://developer.mozilla.org/en-US/docs/
 
 ## Panduan aplikasi lokal sebelumnya
 
-Lingkungan utama: Windows PowerShell. Membutuhkan PHP dengan PDO SQLite dan mbstring, Python 3, serta Node.js dan Edge untuk test browser. Tidak memakai Git atau proses build frontend.
+Lingkungan utama: Windows PowerShell. Membutuhkan PHP dengan PDO SQLite dan mbstring, Python 3, serta Node.js dan Edge untuk test browser. Menjalankan aplikasi tidak memerlukan Git atau proses build frontend.
 
 ## Menjalankan demo lokal
 
@@ -149,7 +149,7 @@ python server/run_local.py
 
 Launcher mencetak alamat loopback, akun admin/viewer, key berbeda untuk setiap perangkat, lokasi database baru, dan log PHP. Simpan credential sendiri bila ingin dipakai kembali. Jangan menyalinnya ke frontend, laporan, atau source publik. Setiap run membuat direktori `server/data/local-<waktu>-<acak>` baru; database aktif lama tidak ditimpa. Hentikan dengan Ctrl+C. Gunakan `--port 8081` bila 8080 sedang dipakai.
 
-Scheduler berjalan sekali per detik selama launcher hidup. Jadwal mengikuti `Asia/Jakarta`; laporan kalender memakai UTC. Jadwal yang terlewat ketika launcher mati tidak dieksekusi ulang. Tanpa ACK dari simulator, command menjadi timeout; ini bukan kegagalan motor fisik.
+Scheduler berjalan berulang dengan jeda satu detik antar-tick selama launcher hidup. Jadwal mengikuti `Asia/Jakarta`; laporan kalender memakai UTC. Jadwal yang terlewat ketika launcher mati tidak dieksekusi ulang. Tanpa ACK dari simulator, command menjadi timeout; ini bukan kegagalan motor fisik.
 
 ## Menjalankan simulator perangkat
 
@@ -181,11 +181,10 @@ python web/tests/verify_static.py
 python web/tests/verify_api_integration.py
 python web/tests/verify_security.py
 python -m unittest discover -s web/tests -p 'test_*.py'
-node --check web/assets/js/app.js
-node --check web/assets/js/experience.js
+Get-ChildItem web/assets/js/*.js | ForEach-Object { node --check $_.FullName }
 ```
 
-Runner memakai database dan browser terpisah. Evidence tersimpan di `../05_Desain-Figma/review-hermes/`. `test_static.py` berisi fungsi pytest; unittest discovery tidak mengeksekusi fungsi pytest tersebut. Pemeriksaan statik utama adalah `verify_static.py`.
+Runner memakai database dan browser terpisah. Evidence run baru tersimpan di `test-output/` (sejak 21 September 2026, tidak di-commit); evidence lama tetap di `../05_Desain-Figma/review-hermes/`. `test_static.py` berisi fungsi pytest; unittest discovery tidak mengeksekusi fungsi pytest tersebut. Pemeriksaan statik utama adalah `verify_static.py`.
 
 ## Batas saat ini
 

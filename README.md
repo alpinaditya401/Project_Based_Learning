@@ -23,8 +23,10 @@ dilindungi. Ketentuan lengkapnya ada di [LICENSE](LICENSE).
 Repositori ini publik semata-mata supaya penilai dapat memeriksa kode sumbernya.
 Sifat publik itu bukan izin penggunaan. Mengumpulkan karya ini atau turunannya
 sebagai karya sendiri adalah plagiarisme akademik. Riwayat commit Git di
-repositori ini mencatat tanggal, penulis, dan isi setiap perubahan, sehingga
-urutan pengerjaannya dapat diverifikasi secara independen.
+repositori ini mencatat tanggal, penulis, dan isi setiap perubahan sejak commit
+awal `3a465cd` pada 19 September 2026, sehingga urutan pengerjaan sejak tanggal
+itu dapat diverifikasi secara independen. Pekerjaan sebelum tanggal itu masuk
+sekaligus dalam commit awal tersebut.
 
 ## Status
 
@@ -32,12 +34,17 @@ Aplikasi web berjalan dan teruji secara lokal. Yang perlu dibaca apa adanya:
 
 - **Kontrol aerator dan pemberi pakan masih SIMULASI.** Perintah tersimpan,
   berpindah status, dan tercatat di audit log, tetapi belum ada bukti aktuasi
-  perangkat fisik. Respons API hardware selalu memuat
-  `physical_actuation_verified=false`.
+  perangkat fisik. Respons sukses untuk ACK perangkat dan untuk pembuatan
+  perintah hardware memuat `physical_actuation_verified=false`.
 - **Pembacaan sensor belum terkalibrasi.** Label `simulation=false` adalah
   deklarasi pengirim, bukan bukti sensor fisik. Sensor pH yang ada berstatus
   placeholder tanah, bukan pH air terkalibrasi.
-- **Profil FPS perangkat fisik dan audit WCAG menyeluruh belum dijalankan.**
+- **Profil FPS perangkat fisik belum dijalankan.** Audit WCAG 2.2 AA untuk SPA
+  `web/` dijalankan 21 September 2026 dengan rasio kontras terukur pada render
+  nyata di viewport 1440x1024, beserta perbaikannya
+  ([laporan](01_AquaSmart/01_Aplikasi-Web/web/tests/WCAG_AUDIT_2026-09-21.md)).
+  Uji screen reader, reflow 400%, jarak teks, kriteria AAA, dan penyapuan kontras
+  khusus layout mobile belum dilakukan.
 - Kontrak menyebut MySQL/MariaDB, kode memakai SQLite. Perbedaan ini diajukan
   lewat Change Request, bukan ditutupi.
 
@@ -72,18 +79,20 @@ Frontend berjalan di Vercel, backend di Railway. URL per-deployment Vercel berad
 di balik Deployment Protection; yang di atas adalah URL produksi yang terbuka.
 
 `GET /api/rules` adalah satu-satunya endpoint yang memasang
-`Access-Control-Allow-Origin: *`. Endpoint lain butuh cookie sesi dan tidak
-boleh dipanggil lintas origin.
+`Access-Control-Allow-Origin: *`. Endpoint lain tidak memasang header itu;
+endpoint yang memakai cookie sesi tidak boleh dipanggil lintas origin.
 
 ## Gerbang kualitas kode
 
 `.github/workflows/ci.yml` menjalankan lint Biome, pemeriksaan tipe, test, dan
-build untuk `frontend/` dan `02_Praktikum-Frontend/modul-8/` pada setiap push dan
-pull request. Job SonarQube berjalan hanya kalau secret `SONAR_TOKEN` sudah
-dipasang; tanpa itu langkahnya dilewati dengan pesan, bukan gagal.
+build untuk `frontend/` pada setiap push dan pull request ke branch `main` dan
+`publish`. Job SonarQube selalu berjalan, tetapi langkah pemindaiannya hanya aktif
+kalau secret `SONAR_TOKEN` sudah dipasang; tanpa itu langkahnya dilewati dengan
+pesan, bukan gagal.
 
-Gerbang yang benar-benar punya bukti adalah CI GitHub Actions. Lima kali
-dijalankan, seluruhnya hijau, termasuk pada commit terakhir `5c3ba6e`:
+Gerbang yang benar-benar punya bukti adalah CI GitHub Actions. Per 21 September
+2026 CI sudah tujuh kali dijalankan dan seluruhnya hijau, terakhir pada commit
+`4519b91`. Tangkapan layar di bawah diambil saat baru lima kali berjalan:
 
 ![Daftar lima jalannya CI di GitHub Actions, semuanya berstatus sukses](01_AquaSmart/01_Aplikasi-Web/docs/gambar/ci-quality-gate-daftar.png)
 
@@ -115,10 +124,11 @@ Lulus berarti keluaran JSON-nya memuat `"passed": true` dengan `failures`,
 `errors`, dan `skipped` bernilai nol, serta `tests_run` sama dengan
 `planned_tests`. Runner ini juga menjalankan `php -l` pada seluruh berkas PHP.
 
-Frontend Next.js diperiksa dari `frontend/`:
+Frontend Next.js diperiksa dari `frontend/`. Build membutuhkan alamat backend di
+`AQUASMART_API_URL`:
 
 ```bash
-npm install && npm run build
+npm install && AQUASMART_API_URL=http://127.0.0.1:8080 npm run build
 ```
 
 ## Kesesuaian kontrak dan SKPL
@@ -127,7 +137,7 @@ npm install && npm run build
 | --- | --- |
 | [Ceklist kesesuaian](01_AquaSmart/01_Aplikasi-Web/docs/CEKLIST_KESESUAIAN_KONTRAK_SKPL.md) | D-01 sampai D-05, FR1 sampai FR24, dan NFR1 sampai NFR15 dipetakan ke status dan bukti di kode |
 | [Change Request CR-001](01_AquaSmart/01_Aplikasi-Web/docs/CR-001_Basis_Data_SQLite.md) | Basis data deployment v1 memakai SQLite, diajukan ke sponsor dan menunggu keputusan |
-| `docs/Laporan_Kesesuaian_Kontrak_dan_SKPL_AquaSmart.docx` | Kedua dokumen di atas dalam satu berkas siap kumpul |
+| `01_AquaSmart/01_Aplikasi-Web/docs/Laporan_Kesesuaian_Kontrak_dan_SKPL_AquaSmart.docx` | Kedua dokumen di atas dalam satu berkas siap kumpul |
 
 Hasil penilaian 21 September 2026 pada commit `5c3ba6e`: dari 44 butir, 8
 terpenuhi, 33 terpenuhi sebagian, 3 tidak dapat diverifikasi, dan tidak ada yang
@@ -137,9 +147,12 @@ memerlukan perangkat fisik atau jendela pengamatan yang tidak ada di repositori.
 
 ## Dokumen
 
+Jalur di bagian ini relatif terhadap `01_AquaSmart/01_Aplikasi-Web/`.
 `DESIGN.md` adalah catatan keputusan desain yang mengikat, bukan draft.
-`server/API.md` adalah sumber kebenaran kontrak API. `REVIEW_REPORT.md` dan
-`CHECKPOINT.md` memuat status dan bukti terbaru.
+`server/API.md` adalah sumber kebenaran kontrak API. `REVIEW_REPORT.md` adalah
+satu-satunya sumber status yang berlaku; bagian teratasnya memuat hasil gerbang
+terbaru. `CHECKPOINT.md` adalah catatan titik stabil dan langkah lanjut sampai
+16 September 2026, bukan status terkini.
 
 ## Catatan publikasi
 

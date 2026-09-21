@@ -2,7 +2,7 @@
 
 Tanggal kesepakatan: 16 September 2026.
 
-Dokumen ini adalah acuan hasil akhir produk berdasarkan percakapan dengan pemilik proyek. Dokumen ini menjelaskan **yang harus dibangun**, bukan klaim bahwa seluruh fitur sudah tersedia. Baca bersama CHECKPOINT.md untuk mengetahui implementasi dan evidence terakhir.
+Dokumen ini adalah acuan hasil akhir produk berdasarkan percakapan dengan pemilik proyek. Dokumen ini menjelaskan **yang harus dibangun**, bukan klaim bahwa seluruh fitur sudah tersedia. Baca bersama REVIEW_REPORT.md untuk status implementasi dan evidence terbaru; CHECKPOINT.md mencatat titik stabil sampai 16 September 2026.
 
 ## 1. Hasil akhir yang diinginkan
 
@@ -141,7 +141,7 @@ Detail antarmuka pemulihan dapat ditentukan saat implementasi; batas kepemilikan
 - Tidak meminta client memasang CA lokal untuk penggunaan produk sehari-hari.
 - PWA dapat diluncurkan dari ikon Home Screen.
 - Cache offline membantu membuka shell aplikasi, bukan menyediakan data sensor baru tanpa koneksi.
-- Hosting, domain, biaya operasional, dan penyedia layanan belum dipilih. Jangan membeli atau menerbitkan layanan berbayar tanpa keputusan pemilik.
+- Per 16 September 2026 hosting, domain, biaya operasional, dan penyedia layanan belum dipilih. Sejak itu backend PHP sudah tayang di Railway dan frontend Next.js di Vercel; tautan dan tanggal pemeriksaannya ada di README.md di root repo. Jangan membeli atau menerbitkan layanan berbayar tanpa keputusan pemilik.
 
 ## 9. Status implementasi saat dokumen dibuat
 
@@ -155,7 +155,7 @@ Detail antarmuka pemulihan dapat ditentukan saat implementasi; batas kepemilikan
 - Perbaikan navigasi demo dan pengujian 11 ukuran layar.
 - HTTPS local CA dan pengujian sertifikat positif/negatif.
 
-Evidence terakhir: 96 tes backend, 30 lint PHP, 24 suite browser (368 assertion JSON + 7 SW stdout), dan 4 pemeriksaan browser HTTPS. Detail/path evidence berada pada CHECKPOINT.md dan REVIEW_REPORT.md. Hasil tersebut hanya membuktikan cakupan yang diuji.
+Evidence saat dokumen ini dibuat (16 September 2026): 96 tes backend, 30 lint PHP, 24 suite browser (368 assertion JSON + 7 SW stdout), dan 4 pemeriksaan browser HTTPS. Gerbang 21 September 2026: 104 tes backend, 37 lint PHP, 26 suite browser (399 assertion JSON + 7 SW stdout). Detail/path evidence berada pada CHECKPOINT.md dan REVIEW_REPORT.md. Hasil tersebut hanya membuktikan cakupan yang diuji.
 
 ### Target produk yang masih perlu diselesaikan
 
@@ -212,7 +212,7 @@ Jangan membuat layar yang seolah menyelesaikan pekerjaan perangkat padahal belum
 
 ## 12. Batas pekerjaan dan aturan kelanjutan
 
-- Tidak memakai Git; gunakan backup manual pada `_backup-sebelum-revisi/` sebelum perubahan besar.
+- Source dicatat dengan Git. `_backup-sebelum-revisi/` dan database tidak ikut di Git, jadi backup manual tetap diperlukan sebelum perubahan besar pada berkas yang tidak di-commit.
 - Pertahankan database dan akun existing; jangan seed ulang data client/lama.
 - Jangan menghapus atau menyamarkan provenance legacy/simulasi.
 - Instruksi sebelumnya membatasi pekerjaan aktif pada software/website dan melarang perubahan `firmware/`. Dokumen target ini tidak otomatis mencabut batas tersebut. Tahap firmware/hardware memerlukan pembukaan cakupan tersendiri oleh pemilik.
@@ -223,4 +223,4 @@ Jangan membuat layar yang seolah menyelesaikan pekerjaan perangkat padahal belum
 
 ## 13. Instruksi singkat untuk sesi berikutnya
 
-> Lanjutkan AquaSmart di `C:\Testing-Project\01_AquaSmart\01_Aplikasi-Web`. Baca `TARGET_AKHIR_AQUASMART.md` sebagai target produk dan `CHECKPOINT.md` sebagai status implementasi. Fokus awal pada website/backend: penerbitan unit, QR/kode aktivasi sekali pakai, onboarding client, dashboard aquaponik suhu/pompa/feeder, dan Web Push. Pertahankan data existing, backup manual tanpa Git, dan jangan mengubah firmware atau status hardware dalam tahap software. Verifikasi source dan jalankan tes yang relevan. Bedakan fitur yang sudah berfungsi dari alur yang menunggu perangkat atau server publik.
+> Lanjutkan AquaSmart di `C:\Testing-Project\01_AquaSmart\01_Aplikasi-Web`. Baca `TARGET_AKHIR_AQUASMART.md` sebagai target produk dan `REVIEW_REPORT.md` sebagai status implementasi. Fokus awal pada website/backend: penerbitan unit, QR/kode aktivasi sekali pakai, onboarding client, dashboard aquaponik suhu/pompa/feeder, dan Web Push. Pertahankan data existing, catat perubahan source dengan Git dan backup manual untuk berkas di luar Git, dan jangan mengubah firmware atau status hardware dalam tahap software. Verifikasi source dan jalankan tes yang relevan. Bedakan fitur yang sudah berfungsi dari alur yang menunggu perangkat atau server publik.

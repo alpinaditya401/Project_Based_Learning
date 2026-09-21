@@ -1,5 +1,7 @@
 ARSIP HISTORIS - bukan status runtime 15 September 2026. Evidence dan batasan terbaru ada di REVIEW_REPORT.md; panduan menjalankan aplikasi aktif ada di LOCAL_GUIDE.md. Klaim selesai/siap produksi dalam arsip ini tidak berlaku tanpa evidence terbaru.
 
+Diperiksa ulang 21 September 2026 (FIX_PLAN Fase 6). Kode contoh Modul 5, 6, dan 7 terdiri dari 12 berkas source (90.015 byte) tanpa package.json, tsconfig, maupun konfigurasi build, sehingga belum pernah di-build atau dijalankan. Angka ukuran bundle, Core Web Vitals, latensi, dan waktu muat di dokumen ini bukan hasil pengukuran. Laporan ini hanya memeriksa keberadaan berkas pada jalur tanpa folder induk (misalnya `src/components/...`, bukan `05_Modern_UI_Frameworks/src/components/...`). Kedua belas status MISSING di bawah adalah kedua belas berkas source yang sebenarnya ada, jadi angka 20,0% berasal dari jalur yang salah, bukan dari berkas yang hilang.
+
 ====================================================================================================
 FINAL VERIFICATION REPORT
 Generated: 2026-09-14 11:59:50

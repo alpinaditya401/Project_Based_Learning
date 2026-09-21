@@ -30,7 +30,7 @@ Referensi implementasi: [ikon manifest](https://developer.mozilla.org/en-US/docs
 
 ## Alur aplikasi yang tersedia
 
-Login menggunakan akun existing. Dashboard menampilkan perangkat, reading/histori, status dan badge sumber. Alert/rekomendasi mengikuti reading; pengaturan threshold dan jadwal mengikuti hak akses. Reports menyediakan ekspor CSV/JSON serta panel telemetry mentah. Label device bukan bukti kalibrasi; legacy tetap tidak diketahui. Tombol kontrol/jadwal existing menggunakan simulasi; flag hardware launcher tetap nonaktif.
+Login menggunakan akun existing. Dashboard menampilkan perangkat, reading/histori, status dan badge sumber. Alert/rekomendasi mengikuti reading; pengaturan threshold dan jadwal mengikuti hak akses. Reports menyediakan ekspor CSV/JSON serta panel telemetry mentah. Label device bukan bukti kalibrasi; legacy tetap tidak diketahui. Tombol kontrol existing hanya mengantrekan perintah berlabel simulasi dan tombol jadwal hanya menyimpan jadwal; launcher ini tidak menjalankan scheduler maupun simulator ACK (`AQUASMART_SIMULATOR_ENABLED=0`), sehingga jadwal tidak dieksekusi dan perintah tidak mendapat ACK; flag hardware launcher tetap nonaktif.
 
 ## Verifikasi dan pemulihan
 

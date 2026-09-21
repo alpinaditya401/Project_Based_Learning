@@ -1,4 +1,5 @@
 import { icon } from './icons.js';
+import { escapeHtml, navigate, qs, qsa, route } from './dom.js';
 
 (() => {
   'use strict';
@@ -302,11 +303,6 @@ import { icon } from './icons.js';
     return `Sumber data: ${sources.map(key=>sourceNames[key]).join(', ') || sourceNames[rowSource(currentDevice())]}. Bukan validasi hardware atau kalibrasi`;
   }
   function currentDevice() { return state.devices[state.activeDevice] || state.devices[0]; }
-  function route() { return (location.hash.replace(/^#\/?/, '') || 'home').split('?')[0]; }
-  function navigate(path) { location.hash = `#/${path}`; }
-  function qs(selector, root = document) { return root.querySelector(selector); }
-  function qsa(selector, root = document) { return [...root.querySelectorAll(selector)]; }
-  function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char])); }
 
   function toast(message, kind = '') {
     const node = document.createElement('div');

@@ -2,13 +2,14 @@ import { icon } from './icons.js';
 import { app, escapeHtml, modalRoot, navigate, qs, qsa, route } from './dom.js';
 import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 import { showModal, toast } from './ui-overlay.js';
-import { APP_KEY, apiMode, authenticated, connectionLabel, csrfToken, currentDevice, loadState, SESSION_KEY, setApiMode, setAuthenticated, setCsrfToken, setState, state } from './state-store.js';
+import { APP_KEY, apiMode, applyServerUser, authenticated, connectionLabel, csrfToken, currentDevice, loadState, SESSION_KEY, setApiMode, setAuthenticated, setCsrfToken, setState, state } from './state-store.js';
 import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 import { landingPage, loginPage, registerPage } from './views-public.js';
 import { dataModeCopy, diagnosticPanel, provenanceBadge, rowSource, sourceCountsView, sourceNames } from './provenance.js';
 import { dashboardPage, deviceEmptyState, qualityIssues, qualityRecommendations, qualitySummary, readingStatus } from './views-dashboard.js';
 import { appShell, pageMeta } from './shell-nav.js';
+import { ApiError, ApiUnavailableError, apiRequest } from './api-client.js';
 (() => {
   'use strict';
 
@@ -22,73 +23,6 @@ import { appShell, pageMeta } from './shell-nav.js';
   function saveState() {
     if (apiMode !== 'demo') { localStorage.removeItem(APP_KEY); return; }
     localStorage.setItem(APP_KEY, JSON.stringify({ ...state, mode: 'demo' }));
-  }
-
-  class ApiError extends Error {
-    constructor(message, status = 0, code = 'api_error') {
-      super(message);
-      this.name = 'ApiError';
-      this.status = status;
-      this.code = code;
-    }
-  }
-
-  class ApiUnavailableError extends Error {
-    constructor(message = 'API lokal tidak tersedia.') {
-      super(message);
-      this.name = 'ApiUnavailableError';
-    }
-  }
-
-  async function apiRequest(path, options = {}) {
-    const method = String(options.method || 'GET').toUpperCase();
-    const headers = { Accept: 'application/json', ...(options.headers || {}) };
-    const init = { method, headers, credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(20000) };
-    if (options.body !== undefined) {
-      headers['Content-Type'] = 'application/json';
-      init.body = JSON.stringify(options.body);
-    }
-    if (!['GET', 'HEAD'].includes(method) && csrfToken) headers['X-CSRF-Token'] = csrfToken;
-
-    let response;
-    try {
-      response = await fetch(path, init);
-    } catch (_) {
-      throw new ApiUnavailableError();
-    }
-
-    const contentType = response.headers.get('content-type') || '';
-    if (!contentType.includes('application/json')) {
-      if (!response.ok) throw new ApiError(`Respons layanan tidak dapat dibaca (HTTP ${response.status}). Coba lagi.`, response.status, 'invalid_response');
-      throw new ApiUnavailableError('Server aktif, tetapi endpoint API belum tersedia.');
-    }
-
-    let payload;
-    try {
-      payload = await response.json();
-    } catch (_) {
-      throw new ApiError(`Respons layanan tidak dapat dibaca (HTTP ${response.status}). Coba lagi.`, response.status, 'invalid_response');
-    }
-
-    if (!response.ok) {
-      const error = payload?.error || {};
-      throw new ApiError(error.message || 'Permintaan API gagal.', response.status, error.code);
-    }
-    return payload;
-  }
-
-  function applyServerUser(user) {
-    if (!user) return;
-    state.user = {
-      id: user.id,
-      accessRole: user.role,
-      workspaceOwnerId: user.workspace_owner_id,
-      name: user.name || state.user.name,
-      username: user.username || state.user.username,
-      role: user.role === 'admin' ? 'Pembudidaya / Admin' : (user.role || state.user.role),
-      phone: user.phone || user.contact || state.user.phone,
-      contact: user.contact || user.phone || state.user.contact || ''
-    };
   }
 
   async function loadDiagnostics() {

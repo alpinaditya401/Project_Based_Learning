@@ -83,3 +83,18 @@ export function setAuthenticated(next) {
 export function setCsrfToken(next) {
   csrfToken = next;
 }
+
+// Fold the server's user payload into state, keeping existing values as fallback.
+export function applyServerUser(user) {
+  if (!user) return;
+  state.user = {
+    id: user.id,
+    accessRole: user.role,
+    workspaceOwnerId: user.workspace_owner_id,
+    name: user.name || state.user.name,
+    username: user.username || state.user.username,
+    role: user.role === 'admin' ? 'Pembudidaya / Admin' : (user.role || state.user.role),
+    phone: user.phone || user.contact || state.user.phone,
+    contact: user.contact || user.phone || state.user.contact || ''
+  };
+}

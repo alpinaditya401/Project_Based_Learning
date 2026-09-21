@@ -1,8 +1,9 @@
 from pathlib import Path
 import sys
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[1]
-APP = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+APP = app_js_text(ROOT / "assets/js")
 SW = (ROOT / "sw.js").read_text(encoding="utf-8")
 errors = []
 

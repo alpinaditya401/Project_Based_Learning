@@ -1,9 +1,10 @@
 from pathlib import Path
 import sys
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[1]
 CSS = (ROOT / "assets/css/app.css").read_text(encoding="utf-8")
-APP = (ROOT / "assets/js/app.js").read_text(encoding="utf-8")
+APP = app_js_text(ROOT / "assets/js")
 EXPERIENCE_PATH = ROOT / "assets/js/experience.js"
 EXPERIENCE = EXPERIENCE_PATH.read_text(encoding="utf-8") if EXPERIENCE_PATH.exists() else ""
 HTML = (ROOT / "index.html").read_text(encoding="utf-8")

@@ -1,9 +1,10 @@
 from pathlib import Path
 import re
 import sys
+from app_sources import app_js_text
 
 ROOT = Path(__file__).resolve().parents[2]
-APP = (ROOT / "web/assets/js/app.js").read_text(encoding="utf-8")
+APP = app_js_text(ROOT / "web/assets/js")
 DATABASE = (ROOT / "server/src/Database.php").read_text(encoding="utf-8")
 README = (ROOT / "web/README.md").read_text(encoding="utf-8")
 

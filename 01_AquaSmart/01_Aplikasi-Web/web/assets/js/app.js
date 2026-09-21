@@ -2,7 +2,7 @@ import { icon } from './icons.js';
 import { app, escapeHtml, modalRoot, navigate, qs, qsa, route } from './dom.js';
 import { average, clamp, formatTime, initials, random, sensorNumber } from './format.js';
 import { showModal, toast } from './ui-overlay.js';
-import { APP_KEY, apiMode, connectionLabel, currentDevice, loadState, SESSION_KEY, setApiMode, setState, state } from './state-store.js';
+import { APP_KEY, apiMode, authenticated, connectionLabel, csrfToken, currentDevice, loadState, SESSION_KEY, setApiMode, setAuthenticated, setCsrfToken, setState, state } from './state-store.js';
 import { mapServerAlert, mapServerAuditLog, mapServerDevice, mapServerReading } from './server-mappers.js';
 
 import { landingPage, loginPage, registerPage } from './views-public.js';
@@ -18,8 +18,6 @@ import { appShell, pageMeta } from './shell-nav.js';
   let simulationTimer = null;
   let resizeHandler = null;
   let commonCleanup = null;
-  let authenticated = false;
-  let csrfToken = '';
 
   function saveState() {
     if (apiMode !== 'demo') { localStorage.removeItem(APP_KEY); return; }
@@ -106,8 +104,8 @@ import { appShell, pageMeta } from './shell-nav.js';
 
   function useDemoMode() {
     setApiMode('demo');
-    csrfToken = '';
-    authenticated = false;
+    setCsrfToken('');
+    setAuthenticated(false);
     sessionStorage.removeItem(SESSION_KEY);
     setState(loadState());
   }
@@ -116,22 +114,22 @@ import { appShell, pageMeta } from './shell-nav.js';
     try {
       const payload = await apiRequest('/api/auth/me');
       setApiMode('api');
-      authenticated = true;
-      csrfToken = payload.csrf_token || '';
+      setAuthenticated(true);
+      setCsrfToken(payload.csrf_token || '');
       sessionStorage.setItem(SESSION_KEY, 'true');
       applyServerUser(payload.user);
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
         setApiMode('api');
-        authenticated = false;
-        csrfToken = '';
+        setAuthenticated(false);
+        setCsrfToken('');
         sessionStorage.removeItem(SESSION_KEY);
       } else if (error instanceof ApiUnavailableError) {
         useDemoMode();
       } else {
         setApiMode('api');
-        authenticated = false;
-        csrfToken = '';
+        setAuthenticated(false);
+        setCsrfToken('');
         sessionStorage.removeItem(SESSION_KEY);
         toast(error.message || 'Layanan sesi gagal. Muat ulang untuk mencoba lagi.', 'warning');
       }
@@ -422,8 +420,8 @@ import { appShell, pageMeta } from './shell-nav.js';
       onConfirm: async () => {
         try {
           if (apiMode === 'api') await apiRequest('/api/auth/logout', { method: 'POST', body: {} });
-          authenticated = false;
-          csrfToken = '';
+          setAuthenticated(false);
+          setCsrfToken('');
           sessionStorage.removeItem(SESSION_KEY);
           toast('Anda berhasil keluar.', 'success');
           navigate('home');
@@ -442,7 +440,7 @@ import { appShell, pageMeta } from './shell-nav.js';
       event.currentTarget.setAttribute('aria-label', password.type === 'password' ? 'Tampilkan password' : 'Sembunyikan password');
     });
     qs('#demo-mode-button')?.addEventListener('click', () => {
-      authenticated = true;
+      setAuthenticated(true);
       sessionStorage.setItem(SESSION_KEY, 'true');
       toast('Mode demo browser diaktifkan.', 'warning');
       navigate('dashboard');
@@ -469,8 +467,8 @@ import { appShell, pageMeta } from './shell-nav.js';
           method: 'POST',
           body: { username, password: passwordValue }
         });
-        authenticated = true;
-        csrfToken = payload.csrf_token || '';
+        setAuthenticated(true);
+        setCsrfToken(payload.csrf_token || '');
         applyServerUser(payload.user);
         sessionStorage.setItem(SESSION_KEY, 'true');
         await syncApiData();
@@ -559,8 +557,8 @@ import { appShell, pageMeta } from './shell-nav.js';
             serial_number: fields.serial.value.trim()
           }
         });
-        authenticated = true;
-        csrfToken = payload.csrf_token || '';
+        setAuthenticated(true);
+        setCsrfToken(payload.csrf_token || '');
         applyServerUser(payload.user);
         sessionStorage.setItem(SESSION_KEY, 'true');
         await syncApiData();
@@ -730,7 +728,7 @@ import { appShell, pageMeta } from './shell-nav.js';
       drawChart();
     } catch (error) {
       if (error instanceof ApiError && error.status === 401) {
-        authenticated = false;
+        setAuthenticated(false);
         sessionStorage.removeItem(SESSION_KEY);
         navigate('login');
         return;
@@ -1123,8 +1121,8 @@ import { appShell, pageMeta } from './shell-nav.js';
         await syncApiData();
       } catch (error) {
         if (error instanceof ApiError && error.status === 401) {
-          authenticated = false;
-          csrfToken = '';
+          setAuthenticated(false);
+          setCsrfToken('');
           sessionStorage.removeItem(SESSION_KEY);
         } else {
           toast('Sebagian data belum dapat disinkronkan.', 'warning');

@@ -68,3 +68,18 @@ export function setApiMode(next) {
 // Read-only views over the state this module owns.
 export function connectionLabel() { return apiMode === 'api' ? 'API lokal' : 'Mode demo'; }
 export function currentDevice() { return state.devices[state.activeDevice] || state.devices[0]; }
+
+// Session flags. Kept as two separate bindings, and the setters are called in
+// the same order the assignments used to run, so the brief window where
+// authenticated is already false while csrfToken still holds a value is
+// preserved exactly as it was.
+export let authenticated = false;
+export let csrfToken = '';
+
+export function setAuthenticated(next) {
+  authenticated = next;
+}
+
+export function setCsrfToken(next) {
+  csrfToken = next;
+}

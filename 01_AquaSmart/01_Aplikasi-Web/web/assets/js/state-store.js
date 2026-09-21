@@ -98,3 +98,10 @@ export function applyServerUser(user) {
     contact: user.contact || user.phone || state.user.contact || ''
   };
 }
+
+export function saveState() {
+  if (apiMode !== 'demo') { localStorage.removeItem(APP_KEY); return; }
+  localStorage.setItem(APP_KEY, JSON.stringify({ ...state, mode: 'demo' }));
+}
+
+export function isAuthed() { return authenticated; }

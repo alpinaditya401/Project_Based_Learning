@@ -9,7 +9,7 @@ export const wait=ms=>new Promise(r=>setTimeout(r,ms));
 export async function until(fn,label='condition',timeout=8000){const end=Date.now()+timeout;let last;while(Date.now()<end){try{const v=await fn();if(v)return v;}catch(e){last=e;}await wait(60);}throw Error('Timeout: '+label+(last?' '+last.message:''));}
 export async function freePort(){const s=net.createServer();await new Promise((r,j)=>s.once('error',j).listen(0,'127.0.0.1',r));const p=s.address().port;await new Promise(r=>s.close(r));return p;}
 export async function launch(label){
- const app=resolve(''), output=resolve('../05_Desain-Figma/review-hermes',label);mkdirSync(output,{recursive:true});
+ const app=resolve(''), output=resolve('test-output',label);mkdirSync(output,{recursive:true});
  const temp=mkdtempSync(join(tmpdir(),'aquasmart-review-')), port=await freePort(), base=`http://127.0.0.1:${port}`;
  const username='review_'+randomBytes(5).toString('hex'), password=randomBytes(24).toString('hex'), deviceKey=randomBytes(24).toString('hex');
  const log=openSync(join(output,'php.log'),'w');

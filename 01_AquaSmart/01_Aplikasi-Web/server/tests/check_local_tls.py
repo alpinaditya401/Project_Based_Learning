@@ -15,7 +15,7 @@ parser.add_argument('--host',required=True)
 args=parser.parse_args()
 runtime=Path.home()/'.aquasmart/tls-local'
 ca=runtime/'data/pki/authorities/local/root.crt'
-output=Path(__file__).resolve().parents[3]/'05_Desain-Figma/review-hermes/local-tls-software'
+output=Path(__file__).resolve().parents[2]/'test-output/local-tls-software'
 output.mkdir(parents=True,exist_ok=True)
 def connect(context, hostname):
     with socket.create_connection((args.host,8443),timeout=5) as sock:

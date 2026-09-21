@@ -7,7 +7,7 @@ import json
 import subprocess
 
 root=Path(__file__).resolve().parents[2]
-out=root.parent/'05_Desain-Figma/review-hermes'/('source-review-'+datetime.now().strftime('%Y%m%d-%H%M%S'))
+out=root/'test-output'/('source-review-'+datetime.now().strftime('%Y%m%d-%H%M%S'))
 out.mkdir(parents=True)
 ignored={'_backup-sebelum-revisi','node_modules','data','__pycache__','.pytest_cache','.git'}
 extensions={'.php','.py','.js','.mjs','.ts','.tsx','.vue','.svelte','.html','.css','.md','.txt','.webmanifest','.svg'}

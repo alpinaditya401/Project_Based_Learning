@@ -3,7 +3,7 @@ from pathlib import Path
 import subprocess,json,sys
 from datetime import datetime
 app=Path(__file__).resolve().parents[2]
-out=app.parent/'05_Desain-Figma/review-hermes'/('frontend-fixes-regression-'+datetime.now().strftime('%Y%m%d-%H%M%S'))
+out=app/'test-output'/('frontend-fixes-regression-'+datetime.now().strftime('%Y%m%d-%H%M%S'))
 out.mkdir(parents=True,exist_ok=False)
 names=['skip_link','drawer_keyboard','settings_labels','http_error_boundary','routes','offline','operations','demo','threshold','data','refresh','settings','feeder','growth','workspace','sw','calendar_reports','calendar_states','completion','device_lifecycle','pwa','export','provenance']
 names.append('demo_devices')

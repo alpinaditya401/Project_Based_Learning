@@ -61,3 +61,5 @@ Thumbs.db
 
 # ---------- Keluaran runtime AquaSmart ----------
 /01_AquaSmart/01_Aplikasi-Web/server/data/local-*/
+# Keluaran runner test. Sebelumnya menumpuk di 05_Desain-Figma/review-hermes.
+/01_AquaSmart/01_Aplikasi-Web/test-output/

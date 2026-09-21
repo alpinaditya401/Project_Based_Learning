@@ -15,7 +15,7 @@ import unittest
 
 def main():
     app = Path(__file__).resolve().parents[2]
-    output = app.parent / '05_Desain-Figma/review-hermes' / ('backend-regression-' + datetime.now().strftime('%Y%m%d-%H%M%S'))
+    output = app / 'test-output' / ('backend-regression-' + datetime.now().strftime('%Y%m%d-%H%M%S'))
     output.mkdir(parents=True, exist_ok=False)
     modules = ['api_integration', 'test_workspace', 'test_monitoring',
                'test_operations', 'test_command_http', 'test_growth',

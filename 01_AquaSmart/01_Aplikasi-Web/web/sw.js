@@ -1,4 +1,4 @@
-const CACHE = 'aquasmart-v9';
+const CACHE = 'aquasmart-v10';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './assets/js/dom.js',
   './assets/js/format.js',
   './assets/js/ui-overlay.js',
+  './assets/js/state-store.js',
   './assets/js/experience.js',
   './assets/images/logo.svg',
   './assets/images/icon-192.png',
